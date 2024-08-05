@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Grid, Input, InputLabel, Typography } from '@mui/material';
 import image from '../../Images/login image.jpg';
 
@@ -15,6 +15,20 @@ function LoginInfo() {
 
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&])[A-Za-z\d@.#$!%*?&]{8,15}$/;
+
+
+  useEffect(() => {
+    // Retrieve data from local storage and set it to state
+    const storedEmail = localStorage.getItem('Email');
+    const storedPassword = localStorage.getItem('Password');
+
+    if (storedEmail && storedPassword) {
+      setUserData({
+        email: JSON.parse(storedEmail),
+        password: JSON.parse(storedPassword)
+      });
+    }
+  }, []);
 
   const changeUserData = (e) => {
     if (e.target.name === "email") {
@@ -47,11 +61,15 @@ function LoginInfo() {
   return (
     <Grid container direction="row" justify="center" alignContent="center" alignItems="center" >
 
-      <Grid item xs={12} sm={6} md={6} lg={6} xl={6} ml={5}style={{ display: 'flex', justifyContent: 'left', alignItems: 'center', marginTop: '80px', marginLeft: '100px' }}>
-        <img src={image} alt="image"  />
+      <Grid item xs={12} sm={6} md={6} lg={6} xl={5} ml={5} sx={{ display: {  xs: 'none', sm: 'none', md: 'flex'}, justifyContent: 'left', alignItems: 'center', marginTop: '80px', marginLeft: '100px' }}>
+        <img src={image} alt="login"  />
       </Grid>
 
-      <Grid item xs={12} sm={6} md={6} lg={4} xl={6}>
+      <Grid item xs={12} sm={6} md={6} lg={4} xl={6} sx={{ marginTop:'70px',
+            marginLeft: {xs: 0, sm: 0, md: '80px',lg: 0, xl:0 },
+            display: { md: 'flex'},
+            justifyContent: 'center',
+            alignItems: 'center'}} >
         <form onSubmit={handleSubmit}>
           <Typography variant="h4" fontWeight="bold">Login to your Account</Typography>
           <Grid container direction="column" sx={{ marginTop: 4 }}>
@@ -80,6 +98,7 @@ function LoginInfo() {
             <Button
               variant="contained"
               sx={{ backgroundColor: `rgb(71, 50, 233)`, marginTop: 4 }}
+              style={{color:"white"}}
               disabled={errors.emailErr || errors.passwordErr}
               type="submit"
               fullWidth

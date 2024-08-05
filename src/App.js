@@ -8,6 +8,7 @@ import RegisterInfo from "./pages/RegisterPage/RegisterPage";
 import NotFound from "./pages/NotFound/NotFound";
 import theme from "./assets/theme";
 import DefaultNavbar from "./components/DefaultNavbar";
+import ProfilePage from 'pages/ProfilePag/ProfilePage';
 import SearchPage from "./pages/SearchPage/SearchPage";
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
             <Route path="/search" element={<SearchPage/>} />
             <Route path="/Login" element={<LoginInfo />} />
             <Route path="/Register" element={<RegisterInfo />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </ThemeProvider>

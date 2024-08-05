@@ -84,6 +84,7 @@ function RegisterInfo() {
 
     if (!hasErrors) {
       // Save data to local storage
+      localStorage.setItem('Name', JSON.stringify(userData.name));
       localStorage.setItem('Email', JSON.stringify(userData.email));
       localStorage.setItem('Password', JSON.stringify(userData.password));
       console.log('Form submitted and data saved to local storage!');

@@ -227,13 +227,13 @@ export default function CourseDetails(params) {
           }}
         >
           {response.weeklyWorkflow.map((workflow, index) => (
-            <Accordion defaultExpanded>
+            <Accordion >
               <AccordionSummary
                 expandIcon={<IoChevronDown/>}
                 aria-controls="panel1-content"
                 id="panel1-header"
               >
-                <Typography>Week {workflow.week} : {workflow.title}</Typography>
+                <Typography variant={'h5'}>week {workflow.week} : {workflow.title}</Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <Typography>

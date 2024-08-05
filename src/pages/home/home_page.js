@@ -112,10 +112,6 @@ export default function HomePage(){
                                 <CourseItem image={item.imageURL} name={item.title} duration={item.details.duration} link={'/course'}/>
                             </Grid>
                         ))}
-                        {/*<Grid xs={12} sm={12} md={6} lg={4} xl={3} >*/}
-                        {/*    <CourseItem/>*/}
-                        {/*</Grid>*/}
-
                     </Grid>
                 </Box>
 

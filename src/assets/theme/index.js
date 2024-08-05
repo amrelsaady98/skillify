@@ -85,7 +85,7 @@ import dialogContentText from "assets/theme/components/dialog/dialogContentText"
 import dialogActions from "assets/theme/components/dialog/dialogActions";
 
 export default createTheme({
-  breakpoints: { ...breakpoints },
+  // breakpoints: { ...breakpoints },
   palette: { ...colors },
   typography: { ...typography },
   boxShadows: { ...boxShadows },

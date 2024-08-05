@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import {amber, grey} from "@mui/material/colors";
 import {Paper} from "@mui/material";
 
-export default function (params){
+export default function CourseDetails(params){
 
 
 

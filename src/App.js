@@ -7,13 +7,14 @@ import LoginInfo from "./pages/LoginPage/LoginPage";
 import RegisterInfo from "./pages/RegisterPage/RegisterPage";
 import NotFound from "./pages/NotFound/NotFound";
 import theme from "./assets/theme";
+import DefaultNavbar from "./components/DefaultNavbar";
 
 function App() {
   return (
       <BrowserRouter>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          {/*<Navbar />*/}
+          <DefaultNavbar routes={[]}/>
           <Routes>
             <Route path="/" element={<HomePage/>} />
             <Route path="/course" element={<CourseDetails/>} />

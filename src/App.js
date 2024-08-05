@@ -8,6 +8,7 @@ import RegisterInfo from "./pages/RegisterPage/RegisterPage";
 import NotFound from "./pages/NotFound/NotFound";
 import theme from "./assets/theme";
 import DefaultNavbar from "./components/DefaultNavbar";
+import ProfilePage from 'pages/ProfilePag/ProfilePage';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="/course" element={<CourseDetails/>} />
             <Route path="/Login" element={<LoginInfo />} />
             <Route path="/Register" element={<RegisterInfo />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </ThemeProvider>

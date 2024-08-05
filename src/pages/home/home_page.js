@@ -107,10 +107,14 @@ export default function HomePage(){
 
                 <Box sx={{ flexGrow: 1 }}>
                     <Grid container >
-                        response.courses.map
-                        <Grid xs={12} sm={12} md={6} lg={4} xl={3} >
-                            <CourseItem/>
-                        </Grid>
+                        {response.courses.map((item, i) => (
+                            <Grid xs={12} sm={12} md={6} lg={4} xl={3} >
+                                <CourseItem image={item.imageURL} name={item.title} duration={item.details.duration} link={'/course'}/>
+                            </Grid>
+                        ))}
+                        {/*<Grid xs={12} sm={12} md={6} lg={4} xl={3} >*/}
+                        {/*    <CourseItem/>*/}
+                        {/*</Grid>*/}
 
                     </Grid>
                 </Box>

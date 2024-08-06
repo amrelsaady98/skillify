@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import profilePic from '../../../src/assets/images/ivana-squares.jpg'
+import axios from 'axios';
 import {
   Box,
   Grid,
@@ -28,6 +29,8 @@ import {
 
 function ProfilePage(){
 
+    const [courses, setCourses] = useState([]);
+
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [userData, setUserData] = useState({
         email: "",
@@ -48,7 +51,12 @@ function ProfilePage(){
           });
         }
       }, []);
- 
+
+      useEffect(() => {
+        axios.get(`https://66b17fd61ca8ad33d4f44343.mockapi.io/api/v2/courses`)
+          .then((res) => setCourses(res.data))
+          .catch((err) => console.log(err));
+      }, []);
 
     const handleListItemClick = (index) => {
         setSelectedIndex(index);
@@ -119,11 +127,13 @@ function ProfilePage(){
             <Card>
               <CardContent>
                 <Typography variant="h6">My Courses</Typography>
-                <Box sx={{ mt: 2 }}>
-                  <Typography variant="body2">UX/UI Design — Websites</Typography>
-                  <Typography variant="caption">Composition, typography, color theory... 68 lessons</Typography>
-                  <Button variant="contained" color="success" size="small" sx={{marginLeft:"40px"}}>Completed</Button>
-                </Box>
+                
+                {courses.map((course, index) => (
+                  <Box sx={{ mt: 2 }}>
+                    <Typography variant="body2">{course.title}</Typography>
+                    <Button variant="contained" color="success" size="small" sx={{marginLeft:"40px"}}>Completed</Button>
+                  </Box>
+                ))}
                 <Divider sx={{ my: 2 }} />
                 <Box>
                   <Typography variant="body2">UX/UI Design — Applications</Typography>

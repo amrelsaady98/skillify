@@ -1,4 +1,4 @@
-import {Pagination,} from "@mui/material";
+import {CircularProgress, Pagination,} from "@mui/material";
 import Carousel from "react-material-ui-carousel";
 import {
     indigo,
@@ -12,6 +12,9 @@ import Grid from "@mui/material/Grid";
 import MyCarouselItem from "./components/MyCarouselItem";
 import TabItem from "./components/TabItem";
 import CourseItem from "./components/CourseItem";
+import {useDispatch, useSelector} from "react-redux";
+import {fetchCourses} from "../../redux/actions/coursesActions";
+import React, {useEffect} from "react";
 
 export default function HomePage(){
 
@@ -33,6 +36,25 @@ export default function HomePage(){
             image:'alx-slide2-min.png'
         }
     ]
+
+    const dispatch = useDispatch();
+    const { data, isLoading, error } = useSelector((state) => state.courses);
+
+    const [page, setPage] = React.useState(1);
+    const handleChange = (event, value) => {
+        setPage(value);
+    };
+
+    useEffect(() => {
+        dispatch(fetchCourses());
+    }, [dispatch]);
+
+    useEffect(() => {
+        console.log('isLoading', isLoading);
+        console.log('data', data);
+        console.log('error', error);
+    }, [isLoading, data, error]);
+
 
     return (
         <>
@@ -107,7 +129,7 @@ export default function HomePage(){
 
                 <Box sx={{ flexGrow: 1 }}>
                     <Grid container >
-                        {response.courses.map((item, i) => (
+                        {isLoading ? <CircularProgress/> : data.map((item, i) => (
                             <Grid xs={12} sm={12} md={6} lg={4} xl={3} >
                                 <CourseItem image={item.imageURL} name={item.title} duration={item.details.duration} link={'/course'}/>
                             </Grid>
@@ -119,7 +141,8 @@ export default function HomePage(){
                     <Grid container item justifyContent="center" xs={12} lg={6} mx="auto" height="100%">
                         <Pagination
                             count={5}
-                            page={2}
+                            page={page}
+                            onChange={handleChange}
                         />
                     </Grid>
                 </Container>

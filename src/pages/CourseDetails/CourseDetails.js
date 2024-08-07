@@ -110,9 +110,10 @@ export default function CourseDetails(params) {
                   borderRadius: pxToRem(8),
                 }}
               >
-                <img src={require(`assets/images/carousel/alx-slide-10.png`)}
+                <img src={data.imageURL}
                      style={{
                        width: '100%',
+                       maxHeight: pxToRem(350),
                        objectFit: 'cover',
                        borderRadius: `${pxToRem(8)} ${pxToRem(8)} 0 0`
                      }}

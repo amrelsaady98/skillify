@@ -16,7 +16,7 @@ function App() {
       <BrowserRouter>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <DefaultNavbar routes={[]}/>
+          <DefaultNavbar routes={[{name:'home', link:'/'}, {name:'Search', link:'/search'}]}/>
           <Routes>
             <Route path="/" element={<HomePage/>} />
             <Route path="/course/:id" element={<CourseDetails/>} />

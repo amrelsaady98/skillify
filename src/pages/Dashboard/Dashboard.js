@@ -1,160 +1,140 @@
-/* // src/components/Dashboard.js
-import React from 'react';
-import { AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemIcon, ListItemText, CssBaseline } from '@mui/material';
-import { Dashboard as DashboardIcon, School as SchoolIcon, BarChart as BarChartIcon } from '@mui/icons-material';
-import { makeStyles } from '@mui/styles';
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-  },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-  },
-  drawer: {
-    width: 240,
-    flexShrink: 0,
-  },
-  drawerPaper: {
-    width: 240,
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-  },
-  toolbar: theme.mixins.toolbar,
-}));
-
-function Dashboard({ children }) {
-  const classes = useStyles();
-
-  return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar>
-          <Typography variant="h6" noWrap>
-            Admin Dashboard
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        className={classes.drawer}
-        variant="permanent"
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-      >
-        <div className={classes.toolbar} />
-        <List>
-          <ListItem button>
-            <ListItemIcon><DashboardIcon /></ListItemIcon>
-            <ListItemText primary="Dashboard" />
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon><SchoolIcon /></ListItemIcon>
-            <ListItemText primary="Courses" />
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon><BarChartIcon /></ListItemIcon>
-            <ListItemText primary="Statistics" />
-          </ListItem>
-        </List>
-      </Drawer>
-      <main className={classes.content}>
-        <div className={classes.toolbar} />
-        {children}
-      </main>
-    </div>
-  );
-}
-
-export default Dashboard;
- */
+import React, { useEffect, useState } from 'react';
+import profilePic from '../../../src/assets/images/ivana-squares.jpg'
+import { BarChart } from '@mui/x-charts/BarChart';
+import { PieChart } from '@mui/x-charts/PieChart';
 
 
-import React from 'react';
-import { AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemIcon, ListItemText, Box, Avatar, Grid, Paper } from '@mui/material';
-import { Dashboard, AttachMoney, MenuBook, CloudUpload, ExitToApp } from '@mui/icons-material';
+import {
+  Box,
+  Grid,
+  Avatar,
+  Typography,
+  Card,
+  CardContent,
+
+  Button,
+  Divider,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from '@mui/material';
+import {
+  AccountCircle,
+  Event,
+  EmojiEvents,
+  Schedule,
+  Mail
+} from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
-const drawerWidth = 240;
 
-const Admindashboard = () => {
+function Admindashboard(){
+
+    const [selectedIndex, setSelectedIndex] = useState(0);
+    const data = [
+      { id: 0, value: 10, label: 'series A' },
+      { id: 1, value: 15, label: 'series B' },
+      { id: 2, value: 20, label: 'series C' },
+    ];
+
+
   return (
-    <Box sx={{ display: 'flex' }}>
-      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-        <Toolbar>
-          <Typography variant="h6" noWrap>
-            Admin Dashboard
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
-        }}
-      >
-        <Toolbar />
-        <Box sx={{ overflow: 'auto' }}>
-          <List>
-            <ListItem button>
-              <ListItemIcon><Dashboard /></ListItemIcon>
-              <ListItemText primary="Dashboard" />
+    <Box sx={{ display: 'flex', height: '100vh'}}>
+      {/* Sidebar */}
+      <Box sx={{ width: '250px', bgcolor: '#2d2562', color: '#ffffff', p: 2, position: 'relative',marginTop:"80px" }}>
+        <Typography variant="h4" sx={{ mb: 4, color: '#ffffff' }}>
+          Skillify Academy
+        </Typography>
+        <List sx={{ mb: 4 }}>
+          {['overview', 'My Courses', 'Events', 'Achievements', 'Schedule'].map((text, index) => (
+            <ListItem
+              button
+              key={text}
+              component={Link}
+              to={index === 0 ? '/profile' : index === 1 ? '/my-courses' : '/Schedule'}
+              selected={selectedIndex === index}
+              sx={{
+                mb: 3,
+                bgcolor: selectedIndex === index ? 'transparent' : 'transparent',
+                borderRadius: selectedIndex === index ? '0 20px 20px 0' : '0',
+                pr: selectedIndex === index ? '20px' : '0',
+                pl: '16px',
+               
+              }}
+            >
+              <ListItemIcon sx={{ color: '#fff' }}>
+                {index === 0 && <AccountCircle />}
+                {index === 1 && <Mail />}
+                {index === 2 && <Event />}
+                {index === 3 && <EmojiEvents />}
+                {index === 4 && <Schedule />}
+                {index === 5 && <Mail />}
+              </ListItemIcon>
+              <ListItemText primary={text} />
             </ListItem>
-            <ListItem button>
-              <ListItemIcon><AttachMoney /></ListItemIcon>
-              <ListItemText primary="My Earnings" />
-            </ListItem>
-            <ListItem button component={Link} to="/">
-              <ListItemIcon><MenuBook /></ListItemIcon>
-              <ListItemText primary="My Courses" />
-            </ListItem>
-            <ListItem button>
-              <ListItemIcon><CloudUpload /></ListItemIcon>
-              <ListItemText primary="Upload Course" />
-            </ListItem>
-            <ListItem button>
-              <ListItemIcon><ExitToApp /></ListItemIcon>
-              <ListItemText primary="Log Out" />
-            </ListItem>
-          </List>
-        </Box>
-      </Drawer>
-      <Box
-        component="main"
-        sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
-      >
-        <Toolbar />
-        <Typography variant="h4">Welcome back, Jacob Jones!</Typography>
-        <Typography variant="body1">Lorem ipsum dolor sit amet consectetur. Condimentum viverra pellentesque diam at sed.</Typography>
-        <Grid container spacing={3} sx={{ mt: 3 }}>
-          <Grid item xs={3}>
-            <Paper sx={{ p: 2, textAlign: 'center' }}>
-              <Typography variant="h6">Total Course</Typography>
-              <Typography variant="h4">21</Typography>
-            </Paper>
+          ))}
+        </List>
+        
+      </Box>
+
+      {/* Main Content */}
+      <Box sx={{ flex: 1, p: 2, bgcolor: '#e6ecff',marginTop:"80px" }}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={7}>
+            <Card sx={{ mb: 2 }}>
+              <CardContent>
+                <Grid container spacing={1} alignItems="center">
+                <BarChart
+                  series={[
+                    { data: [35, 44, 24, 34] },
+                    { data: [51, 6, 49, 30] },
+                    { data: [15, 25, 30, 50] },
+                    { data: [60, 50, 15, 25] },
+                  ]}
+                  height={290}
+                  xAxis={[{ data: ['Q1', 'Q2', 'Q3', 'Q4'], scaleType: 'band' }]}
+                  margin={{ top: 10, bottom: 30, left: 40, right: 10 }}
+                />
+                </Grid>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent>
+                <Typography variant="h6">Recent Courses</Typography>
+                <Divider sx={{ my: 2 }} />
+                <Box>
+                  <Typography variant="body2">UX/UI Design — Applications</Typography>
+                  <Typography variant="caption">Mobile application interface design... 12 lessons</Typography>
+                  <Button variant="contained" color="success" size="small" sx={{marginLeft:"60px"}}>Completed</Button>
+                </Box>
+                <Divider sx={{ my: 2 }} />
+              </CardContent>
+            </Card>
           </Grid>
-          <Grid item xs={3}>
-            <Paper sx={{ p: 2, textAlign: 'center' }}>
-              <Typography variant="h6">Total Students</Typography>
-              <Typography variant="h4">12.5K</Typography>
-            </Paper>
-          </Grid>
-          <Grid item xs={3}>
-            <Paper sx={{ p: 2, textAlign: 'center' }}>
-              <Typography variant="h6">Av. Ratings</Typography>
-              <Typography variant="h4">4.92</Typography>
-            </Paper>
-          </Grid>
-          <Grid item xs={3}>
-            <Paper sx={{ p: 2, textAlign: 'center' }}>
-              <Typography variant="h6">Total Earnings</Typography>
-              <Typography variant="h4">$5.1K</Typography>
-            </Paper>
+
+          <Grid item xs={12} md={5}>
+            <Card sx={{ mb: 2 }}>
+              <CardContent>
+        
+
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent>
+              <PieChart
+                series={[
+                  {
+                    data,
+                    highlightScope: { faded: 'global', highlighted: 'item' },
+                    faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
+                  },
+                ]}
+                height={200}
+              />
+              </CardContent>
+            </Card>
           </Grid>
         </Grid>
       </Box>

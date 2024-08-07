@@ -10,6 +10,8 @@ import theme from "./assets/theme";
 import DefaultNavbar from "./components/DefaultNavbar";
 import ProfilePage from 'pages/ProfilePag/ProfilePage';
 import SearchPage from "./pages/SearchPage/SearchPage";
+import Admindashboard from 'pages/Dashboard/Dashboard';
+import MyCourses from 'pages/Dashboard/MyCourses';
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
             <Route path="/Login" element={<LoginInfo />} />
             <Route path="/Register" element={<RegisterInfo />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/dashboard" element={<Admindashboard />} />
+            <Route path="/mycourses" element={<MyCourses />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </ThemeProvider>

@@ -10,9 +10,12 @@ import theme from "./assets/theme";
 import DefaultNavbar from "./components/DefaultNavbar";
 import ProfilePage from 'pages/ProfilePag/ProfilePage';
 import SearchPage from "./pages/SearchPage/SearchPage";
+import Admindashboard from 'pages/Dashboard/Dashboard';
+
 
 function App() {
   return (
+    
       <BrowserRouter>
         <ThemeProvider theme={theme}>
           <CssBaseline />
@@ -24,6 +27,7 @@ function App() {
             <Route path="/Login" element={<LoginInfo />} />
             <Route path="/Register" element={<RegisterInfo />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/dashboard" element={<Admindashboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </ThemeProvider>

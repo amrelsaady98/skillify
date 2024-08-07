@@ -14,11 +14,12 @@ import TabItem from "./components/TabItem";
 import CourseItem from "./components/CourseItem";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchCourses} from "../../redux/actions/coursesActions";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 
 export default function HomePage(){
 
-    var items = [
+    const tabScrollRef = useRef(null);
+    const items = [
         {
             name: "Random Name #1",
             description: "Probably the most random thing you have ever seen!",
@@ -46,32 +47,25 @@ export default function HomePage(){
 
 
     const [selectedCat, setCat] = useState(0);
+    const [page, setPage] = React.useState(1);
 
-    useEffect(() => {
+    useEffect((state) => {
         if(selectedCat === 0){
-            dispatch(fetchCourses())
+            dispatch(fetchCourses(`p=${page}&l=8`))
         }else {
-            dispatch(fetchCourses(`category=${categories[selectedCat]}`));
+
+            dispatch(fetchCourses(`category=${categories[selectedCat]}&p=${page}&l=8`));
         }
-    }, [selectedCat]);
+        //TODO: implement hasChanged Hook --> reset page when category changes
+    }, [selectedCat, page]);
 
     const dispatch = useDispatch();
     const { data, isLoading, error } = useSelector((state) => state.courses);
 
-    const [page, setPage] = React.useState(1);
+
     const handleChange = (event, value) => {
         setPage(value);
     };
-
-    useEffect(() => {
-        dispatch(fetchCourses());
-    }, [dispatch]);
-
-    useEffect(() => {
-        console.log('isLoading', isLoading);
-        console.log('data', data);
-        console.log('error', error);
-    }, [isLoading, data, error]);
 
 
     return (
@@ -112,6 +106,7 @@ export default function HomePage(){
             </Container>
 
             <Box
+                ref={tabScrollRef}
                 sx={{
                     width:'100vw',
                     px:{ xs: '2rem', sm: '4rem', md: '8rem', lg: '16rem', xl: '16rem' },
@@ -121,7 +116,17 @@ export default function HomePage(){
                 }}
             >
                 {categories.map( (category, i) => (
-                  TabItem({name:category, selected: i === selectedCat, onClick: ()=>{setCat(i)}})
+                  TabItem({
+                        name:category,
+                        selected: i === selectedCat,
+                        onClick: ()=>{
+                            if(window.scrollY < tabScrollRef.current.getBoundingClientRect().top - 200){
+                                console.log('scroll')
+                                tabScrollRef.current.scrollIntoView({behavior: 'smooth', block: 'start'})
+                            }
+                            setCat(i)
+                        }
+                    })
                 ))}
             </Box>
 
@@ -150,7 +155,7 @@ export default function HomePage(){
                         {isLoading ? <Grid xs={12}>
                             <Box
                                 style={{
-                                    height:'25vw',
+                                    height:'50vw',
                                     display:'flex',
                                     alignItems:'center',
                                     justifyContent:'center',

@@ -23,14 +23,14 @@ export const fetchCoursesFailure = (error) => ({
 });
 
 
-export const fetchCourses = (page) => {
+export const fetchCourses = (parameters) => {
   return async (dispatch, getState) => {
 
     dispatch(fetchCoursesRequest());
 
-    axios.get("https://66b17fd61ca8ad33d4f44343.mockapi.io/api/v2/courses")
+    axios.get(`https://66b17fd61ca8ad33d4f44343.mockapi.io/api/v2/courses?${parameters}`)
       .then(response => {
-        // console.log('fetch courses response', response);
+        console.log('fetch courses response', response);
         dispatch(fetchCoursesSuccess(response.data))
       })
       .catch(error => {

@@ -14,7 +14,7 @@ import TabItem from "./components/TabItem";
 import CourseItem from "./components/CourseItem";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchCourses} from "../../redux/actions/coursesActions";
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 
 export default function HomePage(){
 
@@ -36,6 +36,24 @@ export default function HomePage(){
             image:'alx-slide2-min.png'
         }
     ]
+
+    let categories = [
+      'All',
+      'Data',
+      'Programming & Development',
+      'Business'
+    ]
+
+
+    const [selectedCat, setCat] = useState(0);
+
+    useEffect(() => {
+        if(selectedCat === 0){
+            dispatch(fetchCourses())
+        }else {
+            dispatch(fetchCourses(`category=${categories[selectedCat]}`));
+        }
+    }, [selectedCat]);
 
     const dispatch = useDispatch();
     const { data, isLoading, error } = useSelector((state) => state.courses);
@@ -102,10 +120,9 @@ export default function HomePage(){
 
                 }}
             >
-                {TabItem({name:'All', route:'/home', selected:true})}
-                {TabItem({name:'Data'})}
-                {TabItem({name:'Programming & Development'})}
-                {TabItem({name:'Business'})}
+                {categories.map( (category, i) => (
+                  TabItem({name:category, selected: i === selectedCat, onClick: ()=>{setCat(i)}})
+                ))}
             </Box>
 
             <Box
@@ -129,9 +146,21 @@ export default function HomePage(){
 
                 <Box sx={{ flexGrow: 1 }}>
                     <Grid container >
-                        {isLoading ? <CircularProgress/> : data.map((item, i) => (
+
+                        {isLoading ? <Grid xs={12}>
+                            <Box
+                                style={{
+                                    height:'25vw',
+                                    display:'flex',
+                                    alignItems:'center',
+                                    justifyContent:'center',
+                                }}
+                            >
+                                <CircularProgress/>
+                            </Box>
+                        </Grid> : data.map((item, i) => (
                             <Grid xs={12} sm={12} md={6} lg={4} xl={3} >
-                                <CourseItem image={item.imageURL} name={item.title} duration={item.details.duration} link={'/course'}/>
+                                <CourseItem image={item.imageURL} name={item.title} duration={item.details.duration} link={`/course/${item.id}`}/>
                             </Grid>
                         ))}
                     </Grid>
@@ -641,6 +670,8 @@ let response = {
         }
     ]
 }
+
+
 
 
 

@@ -19,7 +19,7 @@ function App() {
           <DefaultNavbar routes={[]}/>
           <Routes>
             <Route path="/" element={<HomePage/>} />
-            <Route path="/course" element={<CourseDetails/>} />
+            <Route path="/course/:id" element={<CourseDetails/>} />
             <Route path="/search" element={<SearchPage/>} />
             <Route path="/Login" element={<LoginInfo />} />
             <Route path="/Register" element={<RegisterInfo />} />

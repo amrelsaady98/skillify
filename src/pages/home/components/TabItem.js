@@ -4,13 +4,13 @@ import Typography from "@mui/material/Typography";
 import pxToRem from "../../../assets/theme/functions/pxToRem";
 import {cyan, grey} from "@mui/material/colors";
 
-export default function TabItem(props = {name:'Item', route:'/', selected:false}){
+export default function TabItem(props = {name:'Item', selected:false, onClick:() => {}}){
     return (
-        <Link to={props.route}>
             <Box
                 sx={{
                     py:'12px'
                 }}
+                onClick={()=>props.onClick()}
             >
                 <Typography variant={'subtitle1'} sx={{
                     px:pxToRem(4),
@@ -29,6 +29,5 @@ export default function TabItem(props = {name:'Item', route:'/', selected:false}
                     {props.name}
                 </Typography>
             </Box>
-        </Link>
     )
 }

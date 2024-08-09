@@ -1,5 +1,5 @@
 import './App.css';
-import {BrowserRouter, Outlet, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {CssBaseline, ThemeProvider} from "@mui/material";
 import HomePage from "./pages/home/home_page";
 import CourseDetails from "./pages/CourseDetails/CourseDetails";
@@ -10,6 +10,8 @@ import theme from "./assets/theme";
 import DefaultNavbar from "./components/DefaultNavbar";
 import ProfilePage from 'pages/ProfilePag/ProfilePage';
 import SearchPage from "./pages/SearchPage/SearchPage";
+import Admindashboard from 'pages/Dashboard/Dashboard';
+
 
 function App() {
   return (
@@ -23,6 +25,7 @@ function App() {
               <Route path="/search" element={<SearchPage/>} />
             </Route>
             <Route element={<WithOutNav/>}>
+              <Route path="/dashboard" element={<Admindashboard />} />
               <Route path="/Login" element={<LoginInfo />} />
               <Route path="/Register" element={<RegisterInfo />} />
               <Route path="/profile" element={<ProfilePage />} />

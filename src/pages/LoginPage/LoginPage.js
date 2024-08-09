@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Grid, Input, InputLabel, Typography } from '@mui/material';
 import image from '../../Images/login image.jpg';
+import {CURRENT_USER_KEY, USERS_DATA_KEY} from "../../utils/constants/loaclStorageConstants";
 
 function LoginInfo() {
   const [userData, setUserData] = useState({
@@ -56,7 +57,49 @@ function LoginInfo() {
     e.preventDefault();
     // Handle form submission here
     console.log('Form submitted!');
+    //TODO: Handel Login || Done
+    if (isPasswordCorrect(userData.email, userData.password)) {
+      loginUser(userData.email);
+      //TODO: route to home page
+      console.log("Correct");
+    } else {
+      //TODO: Alert user --> incorrect password || Done
+      setErrors({...errors, passwordErr: "check password"})
+
+    }
+
   };
+
+  // check if password is correct @return bool
+  function isPasswordCorrect(email, password) {
+    let data = localStorage.getItem(USERS_DATA_KEY);
+    let usersData = JSON.parse(data);
+    let isUserCorrect = false;
+
+    usersData.forEach(element => {
+      if (element.user.email == email && password == element.user.password) {
+        isUserCorrect = true;
+      }
+    });
+    return isUserCorrect;
+  }
+
+
+  function loginUser(email) {
+    let data = localStorage.getItem(USERS_DATA_KEY);
+    let usersData = JSON.parse(data);
+    let currentUser;
+
+    usersData.forEach(element => {
+      if (element.user.email == email) {
+        currentUser = element;
+      }
+    });
+
+    sessionStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
+  }
+
+
 
   return (
     <Grid container direction="row" justify="center" alignContent="center" alignItems="center" >

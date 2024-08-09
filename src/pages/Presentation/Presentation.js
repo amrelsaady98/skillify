@@ -7,24 +7,19 @@ import RegisterInfo from "../RegisterPage/RegisterPage";
 import NotFound from "../NotFound/NotFound";
 import {CssBaseline, ThemeProvider} from "@mui/material";
 import theme from "../../assets/theme";
+import SearchPage from "../SearchPage/SearchPage";
+import Box from "@mui/material/Box";
 
 export default function Presentation(){
   return(
     <>
-      <BrowserRouter>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          {/*<DefaultNavbar routes={[]}/>*/}
-          <Routes>
-            {/*<Route path="/" element={<HomePage/>} />*/}
-            <Route path="/home" element={<HomePage/>} />
-            <Route path="/course" element={<CourseDetails/>} />
-            {/*<Route path="/Login" element={<LoginInfo />} />*/}
-            {/*<Route path="/Register" element={<RegisterInfo />} />*/}
-            {/*<Route path="*" element={<NotFound />} />*/}
-          </Routes>
-        </ThemeProvider>
-      </BrowserRouter>
+      <DefaultNavbar routes={[{name:'home', link:'/'}, {name:'Search', link:'/search'}]}/>
+
+      <Box>
+        <Route path="/home" element={<HomePage/>} />
+        <Route path="/course/:id" element={<CourseDetails/>} />
+        <Route path="/search" element={<SearchPage/>} />
+      </Box>
     </>
   );
 }

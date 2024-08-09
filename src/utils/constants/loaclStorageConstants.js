@@ -1,0 +1,2 @@
+export const USERS_DATA_KEY = 'USERS_DATA_KEY';
+export const CURRENT_USER_KEY = 'CURRENT_USER_KEY';

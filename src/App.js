@@ -1,5 +1,5 @@
 import './App.css';
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Outlet, Route, Routes} from "react-router-dom";
 import {CssBaseline, ThemeProvider} from "@mui/material";
 import HomePage from "./pages/home/home_page";
 import CourseDetails from "./pages/CourseDetails/CourseDetails";
@@ -16,15 +16,18 @@ function App() {
       <BrowserRouter>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <DefaultNavbar routes={[{name:'home', link:'/'}, {name:'Search', link:'/search'}]}/>
           <Routes>
-            <Route path="/" element={<HomePage/>} />
-            <Route path="/course/:id" element={<CourseDetails/>} />
-            <Route path="/search" element={<SearchPage/>} />
-            <Route path="/Login" element={<LoginInfo />} />
-            <Route path="/Register" element={<RegisterInfo />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="*" element={<NotFound />} />
+            <Route element={<WithNav/>}>
+              <Route path="/" element={<HomePage/>} />
+              <Route path="/course/:id" element={<CourseDetails/>} />
+              <Route path="/search" element={<SearchPage/>} />
+            </Route>
+            <Route element={<WithOutNav/>}>
+              <Route path="/Login" element={<LoginInfo />} />
+              <Route path="/Register" element={<RegisterInfo />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
           </Routes>
         </ThemeProvider>
       </BrowserRouter>
@@ -32,3 +35,21 @@ function App() {
 }
 
 export default App;
+
+function WithNav()
+{
+  return(
+    <>
+      <DefaultNavbar routes={[]}/>
+      <Outlet/>
+    </>
+  )
+}
+
+function WithOutNav()
+{
+  return(<Outlet/>)
+}
+
+
+

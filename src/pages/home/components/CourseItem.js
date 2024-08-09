@@ -6,7 +6,15 @@ import Button from "@mui/material/Button";
 import {amber, cyan, green, grey} from "@mui/material/colors";
 import {Link} from "react-router-dom";
 
-export default function CourseItem(props = {name:'courseName', duration:'duration', link:'/', image:'assets/images/carousel/alx-slide-10.png'}){
+export default function CourseItem(
+  props = {
+    name:'courseName',
+    duration:'duration',
+    link:'/',
+    image:'assets/images/carousel/alx-slide-10.png',
+    onApplyClick: (e)=>{}
+  }
+){
     return(
         <>
             <Paper variant={'outlined'}
@@ -42,7 +50,10 @@ export default function CourseItem(props = {name:'courseName', duration:'duratio
                         </Typography>
                     </Box>
                     <Box>
-                        <Button variant={'contained'} autoCapitalize={false} sx={{
+                        <Button
+                          variant={'contained'}
+                          autoCapitalize={false}
+                          sx={{
                             paddingY:pxToRem(4),
                             my:pxToRem(12),
                             width:'100%',
@@ -51,8 +62,17 @@ export default function CourseItem(props = {name:'courseName', duration:'duratio
                             color:grey[800],
                             '&:hover':{
                                 backgroundColor:amber["A200"],
-                            }
-                        }}>
+                            },
+                            '&:active': {
+                              backgroundColor: green["A200"],
+                            },
+                            '&:focus': {
+                              backgroundColor: green["A200"],
+                            },
+
+                        }}
+                        onClick={(e)=>props.onApplyClick(e)}
+                        >
                             <Typography variant={'button'} sx={{
                                 textTransform: 'none',
                             }}>

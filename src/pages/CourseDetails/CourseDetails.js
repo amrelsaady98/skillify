@@ -4,13 +4,16 @@ import Typography from "@mui/material/Typography";
 import {amber, cyan, green, grey, lightBlue, teal} from "@mui/material/colors";
 import {Accordion, AccordionDetails, AccordionSummary, Paper} from "@mui/material";
 import Container from "@mui/material/Container";
-import {IoCheckmarkDone, IoChevronDown} from "react-icons/io5";
+import {IoBookmark, IoBookmarkOutline, IoCheckmarkDone, IoChevronDown} from "react-icons/io5";
 import RoundedFilledButton from "../../components/Buttons/roundedFilledButton";
 import MyRoundedFilledButton from "../../components/Buttons/roundedFilledButton";
 import Divider from "@mui/material/Divider";
 import {useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
+import {BookmarkAdd, HeartBroken} from "@mui/icons-material";
+import {useDispatch, useSelector} from "react-redux";
+import {addCourseToFav, removeFavCourse} from "../../redux/actions/coursesActions";
 
 async function uplaodData(){
   for(let i = 0; i < data.length; i++) {
@@ -28,6 +31,9 @@ export default function CourseDetails(params) {
 
   const [data, setData] = React.useState();
 
+  const {favCourses} = useSelector((state) => state.favCourses);
+  const dispatch = useDispatch();
+
 
   useEffect(() => {
 
@@ -37,7 +43,13 @@ export default function CourseDetails(params) {
 
   }, []);
 
-  console.log(id);
+  console.log(id)
+
+  function addItemToUserFavourite(){
+
+  }
+
+
 
 
   return (
@@ -152,11 +164,37 @@ export default function CourseDetails(params) {
                     ))}
                   </Box>
 
-                  <Box>
+                  <Box
+                    style={{
+                      display:'flex',
+                      height:'4rem',
+                    }}
+                  >
                     <MyRoundedFilledButton
                       title={'Apply Now'}
                       backgroundColor={green["A400"]}
                     />
+                    <Box
+                      style={{
+                        width:'10%',
+                        height:'100%',
+                        display:'flex',
+                        marginLeft:'2rem',
+                        justifyContent: 'center',
+                        alignItems:'center',
+                        cursor:'pointer',
+                      }}
+                      onClick={()=>{
+                        //TODO: Add to user favourite
+                        if(favCourses.filter(course => course.id == data.id).length > 0) {
+                          dispatch(removeFavCourse(data))
+                        } else {
+                          dispatch(addCourseToFav(data))
+                        }
+                      }}
+                    >
+                      {favCourses.filter(course => course.id == data.id).length > 0 ? <IoBookmark size={'2rem'} color={teal['500']}/> : <IoBookmarkOutline size={'2rem'} color={grey['500']}/>}
+                    </Box>
                   </Box>
 
                 </Box>

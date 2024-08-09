@@ -1,6 +1,7 @@
-import {CircularProgress, Pagination,} from "@mui/material";
+import {Alert, CircularProgress, Modal, Pagination,} from "@mui/material";
 import Carousel from "react-material-ui-carousel";
 import {
+    amber,
     indigo,
     teal,
 } from "@mui/material/colors";
@@ -15,6 +16,8 @@ import CourseItem from "./components/CourseItem";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchCourses} from "../../redux/actions/coursesActions";
 import React, {useEffect, useRef, useState} from "react";
+import {CURRENT_USER_KEY} from "../../utils/constants/loaclStorageConstants";
+import {handelAddToUserCourses, isUserLoggedIn} from "../../services/auth_service";
 
 export default function HomePage(){
 
@@ -48,6 +51,11 @@ export default function HomePage(){
 
     const [selectedCat, setCat] = useState(0);
     const [page, setPage] = React.useState(1);
+    const [alert, setAlert] = useState(false);
+    const [alertContent, setAlertContent] = useState({
+        type:'success',
+        content:'initial message',
+    });
 
     useEffect((state) => {
         if(selectedCat === 0){
@@ -56,7 +64,7 @@ export default function HomePage(){
 
             dispatch(fetchCourses(`category=${categories[selectedCat]}&p=${page}&l=8`));
         }
-        //TODO: implement hasChanged Hook --> reset page when category changes
+        //TODO: [DONE] implement hasChanged Hook --> reset page when category changes
     }, [selectedCat, page]);
 
     const dispatch = useDispatch();
@@ -68,78 +76,167 @@ export default function HomePage(){
     };
 
 
+
+
     return (
         <>
             <Carousel
-                indicators={true}
-                indicatorContainerProps={{
-                   style:{
-                       zIndex: 3,
-                       top: "-10rem",
-                       marginBottom:'-4rem',
-                       position: "relative",
-                   }
-                }}
-                indicatorIconButtonProps={{
-                    style:{
-                        scale:'0.7'
-                    }
-                }}
+              indicators={true}
+              indicatorContainerProps={{
+                  style:{
+                      zIndex: 3,
+                      top: "-10rem",
+                      marginBottom:'-4rem',
+                      position: "relative",
+                  }
+              }}
+              indicatorIconButtonProps={{
+                  style:{
+                      scale:'0.7'
+                  }
+              }}
             >
-               {
-                   items.map( (item, i) => (<MyCarouselItem item={item} key={i} />))
-               }
+                {
+                    items.map( (item, i) => (<MyCarouselItem item={item} key={i} />))
+                }
             </Carousel>
             <Container
-                sx={{
-                    display:{xs:'none', lg:'block'},
-                    width: "100%",
-                    height:'7rem',
-                    backgroundColor:indigo[900],
-                    position:'relative',
-                    top:'-3.5rem',
-                    zIndex:'5',
-                    borderRadius:pxToRem(4),
-                }}
-            >
+              sx={{
+                  display:{xs:'none', lg:'block'},
+                  width: "100%",
 
+                  backgroundColor:indigo[900],
+                  position:'relative',
+                  top:'-3.5rem',
+                  zIndex:'5',
+                  borderRadius:pxToRem(4),
+              }}
+            >
+                <Box
+                  style={{
+                      width:'60%',
+                      display:'flex',
+                      alignItems:'center',
+                      justifyContent:'space-between'
+                  }}
+                >
+                    <Box
+                      style={{
+                          padding:'1rem 2rem',
+                          textAlign:'center'
+                      }}
+                    >
+                        <Typography
+                          variant={'h4'}
+                          color={amber["A200"]}
+                        >
+                            100K+
+                        </Typography>
+                        <Typography
+                          variant={'body1'}
+                          color={amber["50"]}
+                        >
+                            Learners
+                            since 2021
+                        </Typography>
+                    </Box>
+                    <Box
+                      style={{
+                          margin:'1rem',
+                          width:'2px',
+                          height:'5rem',
+                          backgroundColor:'white'
+                      }}
+                    />
+                    <Box
+                      style={{
+                          padding:'1rem 2rem',
+                          textAlign:'center'
+                      }}
+                    >
+                        <Typography
+                          variant={'h4'}
+                          color={amber["A200"]}
+                        >
+                            85%
+                        </Typography>
+                        <Typography
+                          variant={'body1'}
+                          color={amber["50"]}
+                        >
+                            Employment
+                            Rate
+                        </Typography>
+                    </Box>
+                    <Box
+                      style={{
+                          margin:'1rem',
+                          width:'2px',
+                          height:'5rem',
+                          backgroundColor:'white'
+                      }}
+                    />
+                    <Box
+                      style={{
+                          padding:'1rem 2rem',
+                          textAlign:'center',
+                      }}
+                    >
+                        <Typography
+                          variant={'h4'}
+                          color={amber["A200"]}
+                        >
+                            93%
+
+                        </Typography>
+                        <Typography
+                          variant={'body1'}
+                          color={amber["50"]}
+                        >
+                            Graduate
+                            Satisfaction Score
+                        </Typography>
+                    </Box>
+                </Box>
             </Container>
 
             <Box
-                ref={tabScrollRef}
-                sx={{
-                    width:'100vw',
-                    px:{ xs: '2rem', sm: '4rem', md: '8rem', lg: '16rem', xl: '16rem' },
-                    display:'flex',
-                    justifyContent:'space-around',
+              ref={tabScrollRef}
+              sx={{
+                  width:'100vw',
+                  px:{ xs: '2rem', sm: '4rem', md: '8rem', lg: '16rem', xl: '16rem' },
+                  display:'flex',
+                  justifyContent:'space-around',
 
-                }}
+              }}
             >
                 {categories.map( (category, i) => (
                   TabItem({
-                        name:category,
-                        selected: i === selectedCat,
-                        onClick: ()=>{
-                            if(window.scrollY < tabScrollRef.current.getBoundingClientRect().top - 200){
-                                console.log('scroll')
-                                tabScrollRef.current.scrollIntoView({behavior: 'smooth', block: 'start'})
-                            }
-                            setCat(i)
-                        }
-                    })
+                      name:category,
+                      selected: i === selectedCat,
+                      onClick: ()=>{
+                          if(window.scrollY < tabScrollRef.current.getBoundingClientRect().top - 200){
+                              console.log('scroll')
+                              tabScrollRef.current.scrollIntoView({behavior: 'smooth', block: 'start'})
+
+                          }
+                          setCat(i)
+                          setPage(1)
+                      }
+                  })
                 ))}
             </Box>
 
             <Box
-                sx={{
-                    py:'2rem',
-                    px:{ xs: '2rem', sm: '4rem', md: '8rem', lg: '16rem', xl: '16rem' },
-                    display:'flex',
-                    flexDirection:'column',
-                    backgroundColor:teal[50],
-                    justifyContent:'center',
-                    textAlign:'center'
-                }}
+              sx={{
+                  py:'2rem',
+                  px:{ xs: '2rem', sm: '4rem', md: '8rem', lg: '16rem', xl: '16rem' },
+                  display:'flex',
+                  flexDirection:'column',
+                  backgroundColor:teal[50],
+                  justifyContent:'center',
+                  textAlign:'center'
+              }}
             >
                 <Typography variant={'title'}>
                     Unlock Your Tech Future & Transform Your Career
@@ -154,19 +251,55 @@ export default function HomePage(){
 
                         {isLoading ? <Grid xs={12}>
                             <Box
-                                style={{
-                                    height:'50vw',
-                                    display:'flex',
-                                    alignItems:'center',
-                                    justifyContent:'center',
-                                }}
+                              style={{
+                                  height:'50vw',
+                                  display:'flex',
+                                  alignItems:'center',
+                                  justifyContent:'center',
+                              }}
                             >
                                 <CircularProgress/>
                             </Box>
                         </Grid> : data.map((item, i) => (
-                            <Grid xs={12} sm={12} md={6} lg={4} xl={3} >
-                                <CourseItem image={item.imageURL} name={item.title} duration={item.details.duration} link={`/course/${item.id}`}/>
-                            </Grid>
+                          <Grid xs={12} sm={12} md={6} lg={4} xl={3} >
+                              <CourseItem
+                                image={item.imageURL}
+                                name={item.title}
+                                duration={item.details.duration}
+                                link={`/course/${item.id}`}
+                                onApplyClick={(e)=>{
+                                    e.preventDefault();
+                                    //TODO: add to user courses
+                                    console.log(isUserLoggedIn())
+                                    if(!isUserLoggedIn()) {
+                                        setAlert(true)
+                                        setAlertContent({
+                                            type:'error',
+                                            message:'Login Required'
+                                        })
+                                    } else {
+                                        handelAddToUserCourses(
+                                          item,
+                                          ()=>{
+                                              setAlert(true)
+                                              setAlertContent({
+                                                  type:'success',
+                                                  message:'Course Added Successfully'
+                                              })
+                                          },
+                                          (message)=>{
+                                              setAlert(true)
+                                              setAlertContent({
+                                                  type:'warning',
+                                                  message: message
+                                              })
+                                          }
+                                        )
+                                    }
+
+                                }}
+                              />
+                          </Grid>
                         ))}
                     </Grid>
                 </Box>
@@ -174,13 +307,35 @@ export default function HomePage(){
                 <Container sx={{ height: "100%" }}>
                     <Grid container item justifyContent="center" xs={12} lg={6} mx="auto" height="100%">
                         <Pagination
-                            count={5}
-                            page={page}
-                            onChange={handleChange}
+                          count={5}
+                          page={page}
+                          onChange={handleChange}
                         />
                     </Grid>
                 </Container>
             </Box>
+            <Modal
+                open={alert}
+                style={{
+                }}
+            >
+                <Box
+                    style={{
+                        width:'100%',
+                        height:'100vh',
+                        backgroundColor:'transparent',
+                        display:'flex',
+                        justifyContent:'center',
+                        alignItems:'center'
+                    }}
+                >
+                    <Alert severity={alertContent.type} onClose={() => {
+                        setAlert(false)
+                    }}>
+                        {alertContent.message}
+                    </Alert>
+                </Box>
+            </Modal>
         </>
     );
 }

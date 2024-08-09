@@ -3,9 +3,13 @@ import React, { useState } from 'react';
 import { Grid, TextField, Button, Typography } from '@mui/material';
 import image from '../../Images/login image.jpg';
 import "./RegisterPage.css"
+import {USERS_DATA_KEY} from "../../utils/constants/loaclStorageConstants";
 
 
 function RegisterInfo() {
+
+
+
   const [userData, setUserData] = useState({
     name: "",
     email: "",
@@ -76,26 +80,74 @@ function RegisterInfo() {
     }
   };
 
+  function addUserToLocalStorage(user = {name:'', email:'', password:''}) {
+    // fetch all user from localStorage --> transform to json Object [{}, {}, {}...]
+    let localDataStr = localStorage.getItem(USERS_DATA_KEY);
+    let data = JSON.parse(localDataStr); // [{}, {}, {}...]
+    if (data == null || data.length === 0){
+      data = [];
+    }
+    // append new user
+    data.push({user:user, courses:[]});
+    // save data to localStorage
+    localStorage.setItem(USERS_DATA_KEY, JSON.stringify(data));
+  }
+
+  function isUserExist(email) {
+    let data = localStorage.getItem(USERS_DATA_KEY);
+    let usersData = JSON.parse(data);
+    let isUserExist = false;
+
+    if (usersData == null || usersData.length === 0) {
+      console.log("there are no users in db");
+      return false;
+    }
+
+    usersData.forEach(element => {
+      if (element.user.email === email) {
+        isUserExist = true;
+      }
+    });
+
+    return isUserExist;
+  }
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
     // Check if there are any errors
+    // great job! -->
     const hasErrors = Object.values(errors).some(err => err);
 
     if (!hasErrors) {
       // Save data to local storage
-      localStorage.setItem('Name', JSON.stringify(userData.name));
-      localStorage.setItem('Email', JSON.stringify(userData.email));
-      localStorage.setItem('Password', JSON.stringify(userData.password));
-      console.log('Form submitted and data saved to local storage!');
-      // Optionally, reset form data or redirect user
-      setUserData({
-        name: "",
-        email: "",
-        username: "",
-        password: "",
-        confirmpassword: ""
-      });
+      //DONE: save items in list
+      if(isUserExist(userData.email)) {
+        setErrors({
+          ...errors,
+          emailErr: 'User Already Exist !!',
+        })
+      } else {
+        addUserToLocalStorage({
+          name: userData.name,
+          email: userData.email,
+          password: userData.password,
+        })
+
+        // console.log('Form submitted and data saved to local storage!');
+        // Optionally, reset form data or redirect user
+        setUserData({
+          name: "",
+          email: "",
+          username: "",
+          password: "",
+          confirmpassword: ""
+        });
+        //TODO: alert user --> account registered
+
+      }
+
       // Optionally, clear local storage or show a success message
     } else {
       console.log('Form contains errors. Please fix them before submitting.');

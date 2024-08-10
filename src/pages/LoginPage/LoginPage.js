@@ -19,7 +19,6 @@ function LoginInfo() {
     passwordErr: ""
   });
 
-  const {userItem, isLoggedIn} = useSelector(state => state.auth)
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

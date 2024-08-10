@@ -1,15 +1,46 @@
 import Container from "@mui/material/Container";
 import bg_img from 'assets/images/carousel/alx-slide2-min.png'
-import {grey, indigo, red} from "@mui/material/colors";
+import {grey, indigo, red, teal} from "@mui/material/colors";
 import pxToRem from "../../assets/theme/functions/pxToRem";
 import Box from "@mui/material/Box";
 import {Image, SearchOff} from "@mui/icons-material";
-import {Button, Input, TextField} from "@mui/material";
+import {Button, CircularProgress, Input, Pagination, TextField} from "@mui/material";
 import styled from "styled-components";
 import Grid from "@mui/material/Grid";
 import CourseItem from "../home/components/CourseItem";
+import React, {useEffect, useState} from "react";
+import {fetchCourses} from "../../redux/actions/coursesActions";
+import {useDispatch, useSelector} from "react-redux";
+import {handelAddToUserCourses, isUserLoggedIn} from "../../services/auth_service";
 
 export default function SearchPage(props) {
+
+
+
+
+  const [page, setPage] = React.useState(1);
+  const [query, setQuery] = useState('')
+  const [alert, setAlert] = useState(false);
+  const [alertContent, setAlertContent] = useState({
+    type:'success',
+    content:'initial message',
+  });
+
+  useEffect((state) => {
+
+  }, [page]);
+
+  const dispatch = useDispatch();
+  const { data, isLoading, error } = useSelector((state) => state.courses);
+
+
+
+  const handleChange = (event, value) => {
+    setPage(value);
+    dispatch(fetchCourses(`title=${query}&p=${page}&l=8`))
+  };
+
+
 
   return(
     <Box>
@@ -67,28 +98,98 @@ export default function SearchPage(props) {
                 backgroundColor:'transparent',
                 color:'white',
               }}
+              onChange={(e)=>{
+                setQuery(e.target.value);
+              }}
             />
           </Box>
-          <Box >
+          <Button variant={'outlined'} onClick={()=>{
+            dispatch(fetchCourses(`title=${query}&p=${page}&l=8`))
+          }}>
             <SearchOff color={'white'}/>
-          </Box>
+          </Button>
         </Box>
 
       </Container>
 
+      <Box
+        sx={{
+          py:'2rem',
+          px:{ xs: '2rem', sm: '4rem', md: '8rem', lg: '16rem', xl: '16rem' },
+          display:'flex',
+          flexDirection:'column',
+          backgroundColor:teal[50],
+          justifyContent:'center',
+          textAlign:'center',
+        }}
+      >
+      <Box sx={{ flexGrow: 1 }}>
+        <Grid container >
 
-      <Container>
-        <Box sx={{ flexGrow: 1 }}>
-          <Grid container >
-            {response.courses.map((item, i) => (
-              <Grid xs={12} sm={12} md={6} lg={4} xl={3} >
-                <CourseItem image={item.imageURL} name={item.title} duration={item.details.duration} link={'/course'}/>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
+          {isLoading ? <Grid xs={12}>
+            <Box
+              style={{
+                height:'50vw',
+                display:'flex',
+                alignItems:'center',
+                justifyContent:'center',
+              }}
+            >
+              <CircularProgress/>
+            </Box>
+          </Grid> : data.map((item, i) => (
+            <Grid xs={12} sm={12} md={6} lg={4} xl={3} >
+              <CourseItem
+                image={item.imageURL}
+                name={item.title}
+                duration={item.details.duration}
+                link={`/course/${item.id}`}
+                onApplyClick={(e)=>{
+                  e.preventDefault();
+                  //TODO: add to user courses
+                  console.log(isUserLoggedIn())
+                  if(!isUserLoggedIn()) {
+                    setAlert(true)
+                    setAlertContent({
+                      type:'error',
+                      message:'Login Required'
+                    })
+                  } else {
+                    handelAddToUserCourses(
+                      item,
+                      ()=>{
+                        setAlert(true)
+                        setAlertContent({
+                          type:'success',
+                          message:'Course Added Successfully'
+                        })
+                      },
+                      (message)=>{
+                        setAlert(true)
+                        setAlertContent({
+                          type:'warning',
+                          message: message
+                        })
+                      }
+                    )
+                  }
+
+                }}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+      </Box>
+      <Container sx={{ height: "100%" }}>
+        <Grid container item justifyContent="center" xs={12} lg={6} mx="auto" height="100%">
+          <Pagination
+            count={5}
+            page={page}
+            onChange={handleChange}
+          />
+        </Grid>
       </Container>
-
     </Box>
   )
 }

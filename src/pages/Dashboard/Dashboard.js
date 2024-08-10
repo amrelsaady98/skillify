@@ -17,7 +17,7 @@ import {
   List,
   ListItem,
   ListItemIcon,
-  ListItemText,
+  ListItemText, Pagination, CircularProgress,
 } from '@mui/material';
 import {
   AccountCircle,
@@ -26,19 +26,50 @@ import {
   Schedule,
   Mail
 } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
+import {
+  MaterialReactTable,
+  useMaterialReactTable,
+} from 'material-react-table';
+import {useDispatch, useSelector} from "react-redux";
+import {fetchCourses} from "../../redux/actions/coursesActions";
+import {grey} from "@mui/material/colors";
+import Container from "@mui/material/Container";
 
 
 function Admindashboard(){
 
-    const [selectedIndex, setSelectedIndex] = useState(0);
-    const data = [
-      { id: 0, value: 10, label: 'series A' },
-      { id: 1, value: 15, label: 'series B' },
-      { id: 2, value: 20, label: 'series C' },
-    ];
+  const navigate = useNavigate();
+
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [page, setPage] = React.useState(1);
+
+  const chartData = [
+    { id: 0, value: 10, label: 'series A' },
+    { id: 1, value: 15, label: 'series B' },
+    { id: 2, value: 20, label: 'series C' },
+  ];
 
 
+
+  const dispatch = useDispatch();
+  const {data, isLoading, error } = useSelector((state) => state.courses);
+
+
+  useEffect(() => {
+    dispatch(fetchCourses(`p=1&l=8`))
+  }, []);
+
+  useEffect(() => {
+    dispatch(fetchCourses(`p=${page}&l=8`))
+    console.log(`p=${page}&l=8`)
+  }, [page]);
+
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
+
+  const sideBarItems = ['overview', 'My Courses',]
   return (
     <Box sx={{ display: 'flex', height: '100vh'}}>
       {/* Sidebar */}
@@ -47,12 +78,12 @@ function Admindashboard(){
           Skillify Academy
         </Typography>
         <List sx={{ mb: 4 }}>
-          {['overview', 'My Courses', 'Events', 'Achievements', 'Schedule'].map((text, index) => (
+          {sideBarItems.map((text, index) => (
             <ListItem
               button
               key={text}
               component={Link}
-              to={index === 0 ? '/profile' : index === 1 ? '/my-courses' : '/Schedule'}
+              // to={index === 0 ? '/profile' : index === 1 ? '/my-courses' : '/Schedule'}
               selected={selectedIndex === index}
               sx={{
                 mb: 3,
@@ -61,6 +92,9 @@ function Admindashboard(){
                 pr: selectedIndex === index ? '20px' : '0',
                 pl: '16px',
                
+              }}
+              onClick={()=>{
+                setSelectedIndex(index)
               }}
             >
               <ListItemIcon sx={{ color: '#fff' }}>
@@ -79,23 +113,23 @@ function Admindashboard(){
       </Box>
 
       {/* Main Content */}
-      <Box sx={{ flex: 1, p: 2, bgcolor: '#e6ecff',marginTop:"80px" }}>
+      {selectedIndex == 0  && <Box sx={{ flex: 1, p: 2, bgcolor: '#e6ecff',marginTop:"80px" }}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={7}>
             <Card sx={{ mb: 2 }}>
               <CardContent>
                 <Grid container spacing={1} alignItems="center">
-                <BarChart
-                  series={[
-                    { data: [35, 44, 24, 34] },
-                    { data: [51, 6, 49, 30] },
-                    { data: [15, 25, 30, 50] },
-                    { data: [60, 50, 15, 25] },
-                  ]}
-                  height={290}
-                  xAxis={[{ data: ['Q1', 'Q2', 'Q3', 'Q4'], scaleType: 'band' }]}
-                  margin={{ top: 10, bottom: 30, left: 40, right: 10 }}
-                />
+                  <BarChart
+                    series={[
+                      { data: [35, 44, 24, 34] },
+                      { data: [51, 6, 49, 30] },
+                      { data: [15, 25, 30, 50] },
+                      { data: [60, 50, 15, 25] },
+                    ]}
+                    height={290}
+                    xAxis={[{ data: ['Q1', 'Q2', 'Q3', 'Q4'], scaleType: 'band' }]}
+                    margin={{ top: 10, bottom: 30, left: 40, right: 10 }}
+                  />
                 </Grid>
               </CardContent>
             </Card>
@@ -117,29 +151,112 @@ function Admindashboard(){
           <Grid item xs={12} md={5}>
             <Card sx={{ mb: 2 }}>
               <CardContent>
-        
+
 
               </CardContent>
             </Card>
             <Card>
               <CardContent>
-              <PieChart
-                series={[
-                  {
-                    data,
-                    highlightScope: { faded: 'global', highlighted: 'item' },
-                    faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
-                  },
-                ]}
-                height={200}
-              />
+                <PieChart
+                  series={[
+                    {
+                      data,
+                      highlightScope: { faded: 'global', highlighted: 'item' },
+                      faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
+                    },
+                  ]}
+                  height={200}
+                />
               </CardContent>
             </Card>
           </Grid>
         </Grid>
-      </Box>
+      </Box>}
+      {selectedIndex == 1 &&
+        <Box
+          style={{
+              width: '100%',
+          }}
+        >
+          <Box
+            style={{
+              width:'100%',
+              padding:'1rem',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(6, 1fr)',
+              justifyContent: 'center',
+              textAlign:'center'
+          }}>
+            <Typography variant={'caption'}>Name</Typography>
+            <Typography variant={'caption'}>Admin Fee</Typography>
+            <Typography variant={'caption'}>Duration</Typography>
+            <Typography variant={'caption'}>Start Date</Typography>
+            <Typography variant={'caption'}>Application DeadLine</Typography>
+          </Box>
+          <Divider/>
+
+          { !isLoading &&
+            data.map((item, index) => (
+              <>
+                <Box
+                  style={{
+                    width:'100%',
+                    padding:'1rem',
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(6, 1fr)',
+                    justifyContent: 'center',
+                    textAlign:'center',
+                    background: index % 2 == 0 ? 'white' : grey['100'],
+                    cursor:'pointer',
+
+                  }}
+                  onClick={()=>{
+                    navigate(`/course/${item.id}`)
+                  }}
+                >
+                  <Typography variant={'caption'}>{item.title}</Typography>
+                  <Typography variant={'caption'}>{item.details.adminFee}</Typography>
+                  <Typography variant={'caption'}>{item.details.duration}</Typography>
+                  <Typography variant={'caption'}>{item.details.startDate}</Typography>
+                  <Typography variant={'caption'}>{item.details.applicationDeadline}</Typography>
+                </Box>
+                <Divider style={{
+                  height:'2px',
+                  padding:'0',
+                  margin:'0'
+                }}/>
+
+              </>
+            ))
+          }
+          {
+            isLoading && <Box
+              style={{
+                height:'500px',
+                width:'100%',
+                display:'flex',
+                alignItems:'center',
+                justifyContent:'center',
+              }}
+            >
+              <CircularProgress/>
+            </Box>
+          }
+          <Container sx={{ height: "100%", m:'2rem' }}>
+            <Grid container item justifyContent="center" xs={12} lg={6} mx="auto" height="100%">
+              <Pagination
+                count={5}
+                page={page}
+                onChange={handleChange}
+              />
+            </Grid>
+          </Container>
+        </Box>
+      }
+
     </Box>
   );
 };
 
 export default Admindashboard;
+

@@ -1,5 +1,5 @@
 import './App.css';
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Outlet, Route, Routes} from "react-router-dom";
 import {CssBaseline, ThemeProvider} from "@mui/material";
 import HomePage from "./pages/home/home_page";
 import CourseDetails from "./pages/CourseDetails/CourseDetails";

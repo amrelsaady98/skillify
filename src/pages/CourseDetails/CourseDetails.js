@@ -14,6 +14,7 @@ import axios from "axios";
 import {BookmarkAdd, HeartBroken} from "@mui/icons-material";
 import {useDispatch, useSelector} from "react-redux";
 import {addCourseToFav, removeFavCourse} from "../../redux/actions/coursesActions";
+import Footer from "../../components/Footer/Footer";
 
 async function uplaodData(){
   for(let i = 0; i < data.length; i++) {
@@ -330,6 +331,7 @@ export default function CourseDetails(params) {
           </Box>
         </Box>
       }
+      <Footer/>
     </>
   )
 }

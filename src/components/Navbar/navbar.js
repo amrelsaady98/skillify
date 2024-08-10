@@ -1,4 +1,4 @@
-import {NavLink} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import React from "react";
 import './navbar.css'
 import Box from "@mui/material/Box";
@@ -9,6 +9,7 @@ const Navbar = () => {
   const [showNavbar, setShowNavbar] = React.useState(false);
   const {userItem, isLoggedIn, isAdmin} = useSelector(state => state.auth)
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleShowNavbar = () => {
     setShowNavbar(!showNavbar);
@@ -101,27 +102,33 @@ const Hamburger = () => (
   </svg>
 );
 
-const Logo = () => (
-  <Box
-    style={{
-      display:'flex',
-      alignItems:'center',
-
-    }}
-  >
-    <img
+const Logo = () => {
+  const navigate = useNavigate();
+  return (
+    <Box
       style={{
-        borderRadius:'50%',
-        height:'3rem',
-        width:'3rem',
-        margin:'1rem',
+        display: 'flex',
+        alignItems: 'center',
+        cursor: 'pointer'
       }}
-      src={require('assets/images/logos/website_logo.png')}/>
-    <Typography>
-      S K I L L I F Y
-    </Typography>
-  </Box>
-);
+      onClick={() => {
+        navigate('/')
+      }}
+    >
+      <img
+        style={{
+          borderRadius: '50%',
+          height: '3rem',
+          width: '3rem',
+          margin: '1rem',
+        }}
+        src={require('assets/images/logos/website_logo.png')}/>
+      <Typography>
+        S K I L L I F Y
+      </Typography>
+    </Box>
+  );
+};
 
 export default Navbar;
 

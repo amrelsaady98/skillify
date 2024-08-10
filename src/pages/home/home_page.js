@@ -18,6 +18,7 @@ import {fetchCourses} from "../../redux/actions/coursesActions";
 import React, {useEffect, useRef, useState} from "react";
 import {CURRENT_USER_KEY} from "../../utils/constants/loaclStorageConstants";
 import {handelAddToUserCourses, isUserLoggedIn} from "../../services/auth_service";
+import Footer from "../../components/Footer/Footer";
 
 export default function HomePage(){
 
@@ -275,7 +276,7 @@ export default function HomePage(){
                                         setAlert(true)
                                         setAlertContent({
                                             type:'error',
-                                            message:'Login Required'
+                                            message:'Login Required',
                                         })
                                     } else {
                                         handelAddToUserCourses(
@@ -313,6 +314,7 @@ export default function HomePage(){
                         />
                     </Grid>
                 </Container>
+
             </Box>
             <Modal
                 open={alert}
@@ -336,6 +338,7 @@ export default function HomePage(){
                     </Alert>
                 </Box>
             </Modal>
+            <Footer/>
         </>
     );
 }

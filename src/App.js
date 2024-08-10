@@ -12,9 +12,20 @@ import ProfilePage from 'pages/ProfilePag/ProfilePage';
 import SearchPage from "./pages/SearchPage/SearchPage";
 import Admindashboard from 'pages/Dashboard/Dashboard';
 import Navbar from "./components/Navbar/navbar";
+import {useDispatch, useSelector} from "react-redux";
+import {useEffect} from "react";
+import {getCurrentUser, isUserLoggedIn} from "./services/auth_service";
+import {userLogin} from "./redux/actions/authActions";
 
 
 function App() {
+  const {userItem, isLoggedIn, isAdmin} = useSelector(state => state.auth)
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (isUserLoggedIn()) {
+      dispatch(userLogin(getCurrentUser()));
+    }
+  }, []);
   return (
       <BrowserRouter>
         <ThemeProvider theme={theme}>

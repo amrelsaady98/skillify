@@ -5,12 +5,13 @@ import image from '../../Images/login image.jpg';
 import "./RegisterPage.css"
 import {USERS_DATA_KEY} from "../../utils/constants/loaclStorageConstants";
 import Box from "@mui/material/Box";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 
 function RegisterInfo() {
 
 
+  const navigate = useNavigate();
 
   const [userData, setUserData] = useState({
     name: "",
@@ -195,6 +196,31 @@ function RegisterInfo() {
               flexDirection:'column'
             }}
           >
+            <Box
+              style={{
+                display:'flex',
+                alignItems:'center',
+                padding:'3rem 0',
+                cursor:'pointer'
+              }}
+              onClick={()=>{
+                navigate('/')
+              }}
+
+            >
+              <img
+                style={{
+                  borderRadius:'50%',
+                  height:'4rem',
+                  width:'4rem',
+                  margin:'1rem',
+                }}
+                src={require('assets/images/logos/website_logo.png')}/>
+              <Typography>
+                S K I L L I F Y
+              </Typography>
+            </Box>
+
             <form onSubmit={handleSubmit}>
               <Typography variant="h4" fontWeight="bold">Sign Up and get started !</Typography>
               <Grid container direction="column" sx={{marginTop: 4}}>

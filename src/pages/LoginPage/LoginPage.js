@@ -149,15 +149,40 @@ function LoginInfo() {
          height:{  xs: '100vh', sm: '100vh', md: '100%'},
        }}
       >
+
         <Box
           style={{
             display:'flex',
             height:'100%',
             width:'100%',
             justifyContent:'center',
-            alignItems:'center'
+            alignItems:'center',
+            flexDirection:'column'
           }}
         >
+          <Box
+            style={{
+              display:'flex',
+              alignItems:'center',
+              padding:'3rem 0',
+              cursor:'pointer'
+            }}
+            onClick={()=>{
+              navigate('/')
+            }}
+          >
+            <img
+              style={{
+                borderRadius:'50%',
+                height:'4rem',
+                width:'4rem',
+                margin:'1rem',
+              }}
+              src={require('assets/images/logos/website_logo.png')}/>
+            <Typography>
+              S K I L L I F Y
+            </Typography>
+          </Box>
           <form onSubmit={handleSubmit}>
             <Typography variant="h4" fontWeight="bold">Login to your Account</Typography>
             <Grid container direction="column" sx={{marginTop: 4}}>

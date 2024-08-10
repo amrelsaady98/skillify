@@ -13,6 +13,7 @@ import { findCourses} from "../../redux/actions/coursesActions";
 import {useDispatch, useSelector} from "react-redux";
 import {handelAddToUserCourses, isUserLoggedIn} from "../../services/auth_service";
 import Typography from "@mui/material/Typography";
+import Footer from "../../components/Footer/Footer";
 
 export default function SearchPage(props) {
 
@@ -213,6 +214,7 @@ export default function SearchPage(props) {
           />
         </Grid>
       </Container>
+      <Footer/>
     </Box>
   )
 }

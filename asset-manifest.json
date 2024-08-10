@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/skillify/static/css/main.352eff95.css",
+    "main.js": "/skillify/static/js/main.a7f4f30a.js",
+    "static/js/453.068eccd7.chunk.js": "/skillify/static/js/453.068eccd7.chunk.js",
+    "static/media/alx-slide-10.png": "/skillify/static/media/alx-slide-10.fe4390e4f0ba85dd3327.png",
+    "static/media/alx-slide2-min.png": "/skillify/static/media/alx-slide2-min.ca498d64035d7eb83bf5.png",
+    "static/media/alx-slide-9.png": "/skillify/static/media/alx-slide-9.1fc61f107d928f97db15.png",
+    "static/media/img.png": "/skillify/static/media/img.8d8a60d192600768aa87.png",
+    "static/media/notfound.svg": "/skillify/static/media/notfound.33ce34fc459e1ada79a1a901e26ef654.svg",
+    "static/media/login image.jpg": "/skillify/static/media/login image.6f255ccc6eb705dc2350.jpg",
+    "static/media/website_logo.png": "/skillify/static/media/website_logo.c258d592d84cfb766fee.png",
+    "static/media/ivana-squares.jpg": "/skillify/static/media/ivana-squares.3c555b856b04c2ab921b.jpg",
+    "index.html": "/skillify/index.html",
+    "main.352eff95.css.map": "/skillify/static/css/main.352eff95.css.map",
+    "main.a7f4f30a.js.map": "/skillify/static/js/main.a7f4f30a.js.map",
+    "453.068eccd7.chunk.js.map": "/skillify/static/js/453.068eccd7.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.352eff95.css",
+    "static/js/main.a7f4f30a.js"
+  ]
+}

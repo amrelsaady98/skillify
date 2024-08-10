@@ -4,6 +4,8 @@ import { Grid, TextField, Button, Typography } from '@mui/material';
 import image from '../../Images/login image.jpg';
 import "./RegisterPage.css"
 import {USERS_DATA_KEY} from "../../utils/constants/loaclStorageConstants";
+import Box from "@mui/material/Box";
+import {Link} from "react-router-dom";
 
 
 function RegisterInfo() {
@@ -157,100 +159,136 @@ function RegisterInfo() {
   return (
     <Grid container direction="row" justify="center" alignContent="center" alignItems="center">
 
-         <Grid item xs={12} sm={6} md={6} lg={6} xl={5} ml={5} sx={{ display: {  xs: 'none', sm: 'none', md: 'flex'}, justifyContent: 'left', alignItems: 'center', marginTop: '80px', marginLeft: '100px' }}>
-          <img src={image} alt="registerImage"  />
-         </Grid>
+      <Box
 
-        <Grid item xs={12} sm={6} md={6} lg={4} xl={6} sx={{ marginTop:'70px',
-            marginLeft: {xs: 0, sm: 0, md: '80px',lg: 0, xl:0 },
-            display: { md: 'flex'},
-            justifyContent: 'center',
-            alignItems: 'center'}} >
-          <form onSubmit={handleSubmit}>
-            <Typography variant="h4" fontWeight="bold">Sign Up and get started !</Typography>
-            <Grid container direction="column" sx={{ marginTop: 4 }}>
-              <Grid item>
-              <TextField
-                  label="Name"
-                  variant="outlined"
-                  name="name"
-                  value={userData.name}
-                  onChange={(e) => changeUserData(e)}
-                  error={!!errors.nameErr} // Set error to true if there's an error
-                  helperText={errors.nameErr}
+        sx={{
+          width:{  xs: '100%', sm: '100%', md: '50%', lg: '60%'},
+          padding:'0',
+          margin:'0',
+          display: {  xs: 'none', sm: 'none', md: 'flex'},
+
+        }}
+      >
+        <img
+          src={image} alt="login"
+          style={{
+            width:'100%',
+            height:'100vh',
+            objectFit:'cover',
+          }}
+        />
+      </Box>
+
+        <Grid
+          sx={{
+            width:{  xs: '100%', sm: '100%', md: '50%', lg: '40%'},
+            height:{  xs: '100vh', sm: '100vh', md: '100%'},
+          }}
+        >
+          <Box
+            style={{
+              display:'flex',
+              height:'100%',
+              width:'100%',
+              justifyContent:'center',
+              alignItems:'center',
+              flexDirection:'column'
+            }}
+          >
+            <form onSubmit={handleSubmit}>
+              <Typography variant="h4" fontWeight="bold">Sign Up and get started !</Typography>
+              <Grid container direction="column" sx={{marginTop: 4}}>
+                <Grid item>
+                  <TextField
+                    label="Name"
+                    variant="outlined"
+                    name="name"
+                    value={userData.name}
+                    onChange={(e) => changeUserData(e)}
+                    error={!!errors.nameErr} // Set error to true if there's an error
+                    helperText={errors.nameErr}
+                    fullWidth
+                    sx={{borderColor: !!errors.nameErr ? 'error' : 'none'}} // Set border color to error if there's an error
+                  />
+                </Grid>
+                <Grid item sx={{marginTop: 2}}>
+                  <TextField
+                    label="Email"
+                    type="email"
+                    name="email"
+                    variant="outlined"
+                    value={userData.email}
+                    onChange={(e) => changeUserData(e)}
+                    error={!!errors.emailErr}
+                    helperText={errors.emailErr}
+                    fullWidth
+                    sx={{borderColor: !!errors.emailErr ? 'error' : 'none'}}
+                  />
+                </Grid>
+                <Grid item sx={{marginTop: 2}}>
+                  <TextField
+                    label="Username"
+                    type="text"
+                    name="username"
+                    variant="outlined"
+                    value={userData.username}
+                    onChange={(e) => changeUserData(e)}
+                    error={!!errors.usernameErr}
+                    helperText={errors.usernameErr}
+                    fullWidth
+                    sx={{borderColor: !!errors.usernameErr ? 'error' : 'none'}}
+                  />
+                </Grid>
+                <Grid item sx={{marginTop: 2}}>
+                  <TextField
+                    label="Password"
+                    type="password"
+                    name="password"
+                    variant="outlined"
+                    value={userData.password}
+                    onChange={(e) => changeUserData(e)}
+                    error={!!errors.passwordErr}
+                    helperText={errors.passwordErr}
+                    fullWidth
+                    sx={{borderColor: !!errors.passwordErr ? 'error' : 'none'}}
+                  />
+                </Grid>
+                <Grid item sx={{marginTop: 2}}>
+                  <TextField
+                    label="Confirm Password"
+                    type="password"
+                    name="confirmedpassword"
+                    variant="outlined"
+                    value={userData.confirmpassword}
+                    onChange={(e) => changeUserData(e)}
+                    error={!!errors.confirmpasswordErr}
+                    helperText={errors.confirmpasswordErr}
+                    fullWidth
+                    sx={{borderColor: !!errors.confirmpasswordErr ? 'error' : 'none'}}
+                  />
+                </Grid>
+                <Button
+                  variant="contained"
+                  sx={{backgroundColor: `rgb(71, 50, 233)`, marginTop: 4}}
+                  style={{color: "white"}}
+                  type="submit"
                   fullWidth
-                  sx={{ borderColor: !!errors.nameErr ? 'error' : 'none' }} // Set border color to error if there's an error
-              />
+                  disabled={!!(
+                    errors.nameErr || errors.emailErr || errors.usernameErr || errors.passwordErr || errors.confirmpasswordErr)}
+                >
+                  Register
+                </Button>
               </Grid>
-              <Grid item sx={{ marginTop: 2 }}>
-              <TextField
-                label="Email"
-                type="email"
-                name="email"
-                variant="outlined"
-                value={userData.email}
-                onChange={(e) => changeUserData(e)}
-                error={!!errors.emailErr}
-                helperText={errors.emailErr}
-                fullWidth
-                sx={{ borderColor: !!errors.emailErr ? 'error' : 'none' }}
-              />
-              </Grid>
-              <Grid item sx={{ marginTop: 2 }}>
-              <TextField
-                  label="Username"
-                  type="text"
-                  name="username"
-                  variant="outlined"
-                  value={userData.username}
-                  onChange={(e) => changeUserData(e)}
-                  error={!!errors.usernameErr}
-                  helperText={errors.usernameErr}
-                  fullWidth
-                  sx={{ borderColor: !!errors.usernameErr ? 'error' : 'none' }}
-              />
-              </Grid>
-              <Grid item sx={{ marginTop: 2 }}>
-              <TextField
-                  label="Password"
-                  type="password"
-                  name="password"
-                  variant="outlined"
-                  value={userData.password}
-                  onChange={(e) => changeUserData(e)}
-                  error={!!errors.passwordErr}
-                  helperText={errors.passwordErr}
-                  fullWidth
-                  sx={{ borderColor: !!errors.passwordErr ? 'error' : 'none' }}
-                />
-              </Grid>
-              <Grid item sx={{ marginTop: 2 }}>
-              <TextField
-                  label="Confirm Password"
-                  type="password"
-                  name="confirmedpassword"
-                  variant="outlined"
-                  value={userData.confirmpassword}
-                  onChange={(e) => changeUserData(e)}
-                  error={!!errors.confirmpasswordErr}
-                  helperText={errors.confirmpasswordErr}
-                  fullWidth
-                  sx={{ borderColor: !!errors.confirmpasswordErr ? 'error' : 'none' }}
-              />
-              </Grid>
-              <Button
-                variant="contained"
-                sx={{ backgroundColor: `rgb(71, 50, 233)`, marginTop: 4 }}
-                style={{color:"white"}}
-                type="submit"
-                fullWidth
-                disabled={!!(
-                  errors.nameErr  || errors.emailErr || errors.usernameErr|| errors.passwordErr  || errors.confirmpasswordErr)}
-              >
-                Register
-              </Button>
-            </Grid>
-          </form>
+            </form>
+            <Box style={{
+              padding:'1rem'
+            }}>
+              <Typography>
+                Already have an account? <Link to={"/login"}>Login here</Link>
+              </Typography>
+            </Box>
+          </Box>
+
         </Grid>
     </Grid>
   );

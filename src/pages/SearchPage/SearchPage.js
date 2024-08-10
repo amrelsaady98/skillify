@@ -9,9 +9,10 @@ import styled from "styled-components";
 import Grid from "@mui/material/Grid";
 import CourseItem from "../home/components/CourseItem";
 import React, {useEffect, useState} from "react";
-import {fetchCourses} from "../../redux/actions/coursesActions";
+import { findCourses} from "../../redux/actions/coursesActions";
 import {useDispatch, useSelector} from "react-redux";
 import {handelAddToUserCourses, isUserLoggedIn} from "../../services/auth_service";
+import Typography from "@mui/material/Typography";
 
 export default function SearchPage(props) {
 
@@ -26,18 +27,21 @@ export default function SearchPage(props) {
     content:'initial message',
   });
 
+
   useEffect((state) => {
 
   }, [page]);
 
   const dispatch = useDispatch();
-  const { data, isLoading, error } = useSelector((state) => state.courses);
+  const { resultData, isLoadingResults, error } = useSelector((state) => state.searchCourses);
 
 
-
+  useEffect(() => {
+    console.log('resultData ',resultData)
+  }, [resultData]);
   const handleChange = (event, value) => {
     setPage(value);
-    dispatch(fetchCourses(`title=${query}&p=${page}&l=8`))
+    dispatch(findCourses(`title=${query}&p=${page}&l=8`))
   };
 
 
@@ -62,21 +66,25 @@ export default function SearchPage(props) {
       <Container
         sx={{
           width: "100%",
-          height:'7rem',
-          backgroundColor:indigo[900],
+          height:'5rem',
+          backgroundColor:'transparent',
           position:'relative',
-          top:'-3.5rem',
+          top:'-2.5rem',
           zIndex:'5',
-          borderRadius:pxToRem(4),
+
         }}
       >
 
         <Box
           style={{
+            padding:'0',
+            paddingLeft:'2.5rem',
             width:'100%',
             height:'100%',
             display:'flex',
             alignItems: 'center',
+            backgroundColor:indigo[900],
+            borderRadius:'4rem',
           }}
         >
           <Box
@@ -103,11 +111,26 @@ export default function SearchPage(props) {
               }}
             />
           </Box>
-          <Button variant={'outlined'} onClick={()=>{
-            dispatch(fetchCourses(`title=${query}&p=${page}&l=8`))
-          }}>
-            <SearchOff color={'white'}/>
-          </Button>
+          <Box
+            style={{
+              width:'25%',
+              height:'100%',
+              marginLeft:'-0.5rem',
+              backgroundColor:'white',
+              borderRadius:'4rem',
+              display:'flex',
+              alignItems:'center',
+              justifyContent:'center',
+              cursor:'pointer',
+            }}
+            onClick={()=>{
+              dispatch(findCourses(`title=${query}&p=${page}&l=8`))
+            }}
+          >
+            <Typography variant={"h5"}>
+              S e a r c h
+            </Typography>
+          </Box>
         </Box>
 
       </Container>
@@ -126,7 +149,7 @@ export default function SearchPage(props) {
       <Box sx={{ flexGrow: 1 }}>
         <Grid container >
 
-          {isLoading ? <Grid xs={12}>
+          {isLoadingResults ? <Grid xs={12}>
             <Box
               style={{
                 height:'50vw',
@@ -137,7 +160,7 @@ export default function SearchPage(props) {
             >
               <CircularProgress/>
             </Box>
-          </Grid> : data.map((item, i) => (
+          </Grid> : resultData.map((item, i) => (
             <Grid xs={12} sm={12} md={6} lg={4} xl={3} >
               <CourseItem
                 image={item.imageURL}

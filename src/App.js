@@ -11,6 +11,7 @@ import DefaultNavbar from "./components/DefaultNavbar";
 import ProfilePage from 'pages/ProfilePag/ProfilePage';
 import SearchPage from "./pages/SearchPage/SearchPage";
 import Admindashboard from 'pages/Dashboard/Dashboard';
+import Navbar from "./components/Navbar/navbar";
 
 
 function App() {
@@ -23,12 +24,13 @@ function App() {
               <Route path="/" element={<HomePage/>} />
               <Route path="/course/:id" element={<CourseDetails/>} />
               <Route path="/search" element={<SearchPage/>} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/dashboard" element={<Admindashboard />} />
+
             </Route>
             <Route element={<WithOutNav/>}>
-              <Route path="/dashboard" element={<Admindashboard />} />
               <Route path="/Login" element={<LoginInfo />} />
               <Route path="/Register" element={<RegisterInfo />} />
-              <Route path="/profile" element={<ProfilePage />} />
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>
@@ -43,7 +45,7 @@ function WithNav()
 {
   return(
     <>
-      <DefaultNavbar routes={[]}/>
+      <Navbar/>
       <Outlet/>
     </>
   )

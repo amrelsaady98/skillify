@@ -25,6 +25,26 @@ function handelAddToUserCourses(courseItem, successCallback = ()=>{}, errorCallb
 
 }
 
+function handelRemoveFromUserCourses(courseItem, successCallback = ()=>{}, errorCallback = (error)=>{}){
+  if (isUserLoggedIn()){
+    // check if course is already exist in his courses list
+    let userData = JSON.parse(sessionStorage.getItem(CURRENT_USER_KEY));
+    //  remove course from user list
+    for (let i = 0; i < userData.courses.length; i++) {
+      if (userData.courses[i].id === courseItem.id){
+        userData.courses.splice(i, 1);
+      }
+    }
+    console.log(userData.courses)
+    sessionStorage.setItem(CURRENT_USER_KEY, JSON.stringify(userData));
+    //TODO:[DONE] update to local storage
+    updateLocalStorage(userData)
+    successCallback()
+  }else {
+    errorCallback('Login Required');
+  }
+}
+
 function updateLocalStorage(userItem){
   let usersData = JSON.parse(localStorage.getItem(USERS_DATA_KEY));
   for(let i = 0; i < usersData.length; i++){
@@ -34,6 +54,7 @@ function updateLocalStorage(userItem){
   }
   localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(usersData));
 }
+
 function isUserLoggedIn(){
   let userData = sessionStorage.getItem(CURRENT_USER_KEY);
   if (userData){
@@ -42,5 +63,8 @@ function isUserLoggedIn(){
     return false
   }
 }
-
-export {handelAddToUserCourses, isUserLoggedIn}
+function getCurrentUser(){
+  let userData = sessionStorage.getItem(CURRENT_USER_KEY);
+  return JSON.parse(userData);
+}
+export {handelAddToUserCourses, isUserLoggedIn, getCurrentUser, handelRemoveFromUserCourses}

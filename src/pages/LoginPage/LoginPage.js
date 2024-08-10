@@ -2,6 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Button, Grid, Input, InputLabel, Typography } from '@mui/material';
 import image from '../../Images/login image.jpg';
 import {CURRENT_USER_KEY, USERS_DATA_KEY} from "../../utils/constants/loaclStorageConstants";
+import Box from "@mui/material/Box";
+import {Link, useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {userLogin} from "../../redux/actions/authActions";
+import {getCurrentUser} from "../../services/auth_service";
 
 function LoginInfo() {
   const [userData, setUserData] = useState({
@@ -13,6 +18,10 @@ function LoginInfo() {
     emailErr: "",
     passwordErr: ""
   });
+
+  const {userItem, isLoggedIn} = useSelector(state => state.auth)
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&])[A-Za-z\d@.#$!%*?&]{8,15}$/;
@@ -61,7 +70,9 @@ function LoginInfo() {
     if (isPasswordCorrect(userData.email, userData.password)) {
       loginUser(userData.email);
       //TODO: route to home page
-      console.log("Correct");
+      console.log(userData);
+      dispatch(userLogin(getCurrentUser()));
+      navigate('/');
     } else {
       //TODO: Alert user --> incorrect password || Done
       setErrors({...errors, passwordErr: "check password"})
@@ -102,54 +113,96 @@ function LoginInfo() {
 
 
   return (
-    <Grid container direction="row" justify="center" alignContent="center" alignItems="center" >
+    <Grid
+      container direction="row"
+      justify="center"
+      alignContent="center"
+      alignItems="center"
+      style={{
 
-      <Grid item xs={12} sm={6} md={6} lg={6} xl={5} ml={5} sx={{ display: {  xs: 'none', sm: 'none', md: 'flex'}, justifyContent: 'left', alignItems: 'center', marginTop: '80px', marginLeft: '100px' }}>
-        <img src={image} alt="login"  />
-      </Grid>
+      }}
+    >
 
-      <Grid item xs={12} sm={6} md={6} lg={4} xl={6} sx={{ marginTop:'70px',
-            marginLeft: {xs: 0, sm: 0, md: '80px',lg: 0, xl:0 },
-            display: { md: 'flex'},
-            justifyContent: 'center',
-            alignItems: 'center'}} >
-        <form onSubmit={handleSubmit}>
-          <Typography variant="h4" fontWeight="bold">Login to your Account</Typography>
-          <Grid container direction="column" sx={{ marginTop: 4 }}>
-            <Grid item>
-              <InputLabel shrink> Email Address </InputLabel>
-              <Input
-                type="email"
-                name="email"
-                value={userData.email}
-                onChange={(e) => changeUserData(e)}
+      <Box
+
+        sx={{
+          width:'50%',
+          padding:'0',
+          margin:'0',
+          display: {  xs: 'none', sm: 'none', md: 'flex'},
+
+        }}
+      >
+        <img
+          src={image} alt="login"
+          style={{
+            width:'100%',
+            height:'100vh',
+            objectFit:'cover',
+          }}
+        />
+      </Box>
+
+      <Grid
+       sx={{
+         width:{  xs: '100%', sm: '100%', md: '50%'},
+         height:{  xs: '100vh', sm: '100vh', md: '100%'},
+       }}
+      >
+        <Box
+          style={{
+            display:'flex',
+            height:'100%',
+            width:'100%',
+            justifyContent:'center',
+            alignItems:'center'
+          }}
+        >
+          <form onSubmit={handleSubmit}>
+            <Typography variant="h4" fontWeight="bold">Login to your Account</Typography>
+            <Grid container direction="column" sx={{marginTop: 4}}>
+              <Grid item>
+                <InputLabel shrink> Email Address </InputLabel>
+                <Input
+                  type="email"
+                  name="email"
+                  value={userData.email}
+                  onChange={(e) => changeUserData(e)}
+                  fullWidth
+                />
+                <Typography color="error">{errors.emailErr}</Typography>
+              </Grid>
+              <Grid item sx={{marginTop: 2}}>
+                <InputLabel shrink> Password </InputLabel>
+                <Input
+                  type="password"
+                  name="password"
+                  value={userData.password}
+                  onChange={(e) => changeUserData(e)}
+                  fullWidth
+                />
+                <Typography color="error">{errors.passwordErr}</Typography>
+              </Grid>
+              <Button
+                variant="contained"
+                sx={{backgroundColor: `rgb(71, 50, 233)`, marginTop: 4}}
+                style={{color: "white"}}
+                disabled={errors.emailErr || errors.passwordErr}
+                type="submit"
                 fullWidth
-              />
-              <Typography color="error">{errors.emailErr}</Typography>
+              >
+                Login
+              </Button>
+              <Box style={{
+                padding:'1rem'
+              }}>
+                <Typography>
+                  Did not have an account? <Link to={"/register"}>Register here</Link>
+                </Typography>
+              </Box>
             </Grid>
-            <Grid item sx={{ marginTop: 2 }}>
-              <InputLabel shrink> Password </InputLabel>
-              <Input
-                type="password"
-                name="password"
-                value={userData.password}
-                onChange={(e) => changeUserData(e)}
-                fullWidth
-              />
-              <Typography color="error">{errors.passwordErr}</Typography>
-            </Grid>
-            <Button
-              variant="contained"
-              sx={{ backgroundColor: `rgb(71, 50, 233)`, marginTop: 4 }}
-              style={{color:"white"}}
-              disabled={errors.emailErr || errors.passwordErr}
-              type="submit"
-              fullWidth
-            >
-              Login
-            </Button>
-          </Grid>
-        </form>
+          </form>
+        </Box>
       </Grid>
     </Grid>
   );

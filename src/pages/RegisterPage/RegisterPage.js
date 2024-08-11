@@ -119,16 +119,26 @@ function RegisterInfo() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    const newErrors = {
+      nameErr: userData.name === '' ? 'Name is required' : errors.nameErr,
+      emailErr: userData.email === '' ? 'Email is required' : errors.emailErr,
+      usernameErr: userData.username === '' ? 'Username is required' : errors.usernameErr,
+      passwordErr: userData.password === '' ? 'Password is required' : errors.passwordErr,
+      confirmpasswordErr: userData.confirmpassword === '' ? 'Please confirm your password' : errors.confirmpasswordErr,
+    };
+  
+    setErrors(newErrors);
+
     // Check if there are any errors
     // great job! -->
-    const hasErrors = Object.values(errors).some(err => err);
+    const hasErrors = Object.values(newErrors).some(err => err);
 
     if (!hasErrors) {
       // Save data to local storage
       //DONE: save items in list
       if(isUserExist(userData.email)) {
         setErrors({
-          ...errors,
+          ...newErrors,
           emailErr: 'User Already Exist !!',
         })
       } else {

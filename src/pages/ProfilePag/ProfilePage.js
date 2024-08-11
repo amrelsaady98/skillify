@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import profilePic from '../../../src/assets/images/ivana-squares.jpg'
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Grid,
@@ -43,6 +44,7 @@ function ProfilePage(){
     });
   const {favCourses} = useSelector((state) => state.favCourses);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [selectedIndex, setSelectedIndex] = useState(0);
     const [userData, setUserData] = useState({
@@ -65,6 +67,11 @@ function ProfilePage(){
 
     const handleListItemClick = (index) => {
         setSelectedIndex(index);
+    };
+
+    const handleLogout = () => {
+      localStorage.removeItem("currentUser"); // Remove user data
+      navigate("/login"); // Redirect to login page
     };
 
   return (
@@ -125,8 +132,16 @@ function ProfilePage(){
                     <Typography variant="body2">E-mail: {currentUser.user.email}</Typography>
                     <Typography variant="body2">Phone: +378 265 236 25</Typography>
                   </Grid>
+                  <Grid sx={{marginLeft: 80}}>
+                      <CardActions>
+                        <Button variant="contained"  color="error" onClick={handleLogout} >
+                          Logout
+                        </Button>
+                      </CardActions>
+                  </Grid>
                 </Grid>
               </CardContent>
+              
             </Card>
 
             <Card>

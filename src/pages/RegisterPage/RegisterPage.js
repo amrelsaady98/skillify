@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Grid, TextField, Button, Typography } from '@mui/material';
+import {Grid, TextField, Button, Typography, Alert, Modal} from '@mui/material';
 import image from '../../Images/login image.jpg';
 import "./RegisterPage.css"
 import {USERS_DATA_KEY} from "../../utils/constants/loaclStorageConstants";
@@ -12,6 +12,11 @@ function RegisterInfo() {
 
 
   const navigate = useNavigate();
+  const [alert, setAlert] = useState(false);
+  const [alertContent, setAlertContent] = useState({
+    type:'success',
+    content:'initial message',
+  });
 
   const [userData, setUserData] = useState({
     name: "",
@@ -141,13 +146,22 @@ function RegisterInfo() {
           ...newErrors,
           emailErr: 'User Already Exist !!',
         })
+        setAlert(true)
+        setAlertContent({
+          type:'error',
+          message:'User Already Exist !!'
+        })
       } else {
         addUserToLocalStorage({
           name: userData.name,
           email: userData.email,
           password: userData.password,
         })
-
+        setAlert(true)
+        setAlertContent({
+          type:'success',
+          message:'User Added Successfully'
+        })
         // console.log('Form submitted and data saved to local storage!');
         // Optionally, reset form data or redirect user
         setUserData({
@@ -326,6 +340,28 @@ function RegisterInfo() {
           </Box>
 
         </Grid>
+      <Modal
+        open={alert}
+        style={{
+        }}
+      >
+        <Box
+          style={{
+            width:'100%',
+            height:'100vh',
+            backgroundColor:'transparent',
+            display:'flex',
+            justifyContent:'center',
+            alignItems:'center'
+          }}
+        >
+          <Alert severity={alertContent.type} onClose={() => {
+            setAlert(false)
+          }}>
+            {alertContent.message}
+          </Alert>
+        </Box>
+      </Modal>
     </Grid>
   );
 }

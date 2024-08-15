@@ -539,7 +539,9 @@ function Admindashboard() {
                   dispatch(addCourse(createCourseData))
                 }
               }}>
-                <Typography>
+                <Typography sx={{
+                  color:'#fff'
+                }}>
                   Add Course
                 </Typography>
               </Button>

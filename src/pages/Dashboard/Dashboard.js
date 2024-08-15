@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {BarChart} from '@mui/x-charts/BarChart';
-import {PieChart} from '@mui/x-charts/PieChart';
-
+import { PieChart } from '@mui/x-charts/PieChart';
+import Stack from '@mui/material/Stack';
 
 import {
   Box,
@@ -11,6 +11,7 @@ import {
   CircularProgress,
   Divider,
   Grid, Input,
+  LinearProgress,
   List,
   ListItem,
   ListItemIcon,
@@ -19,13 +20,12 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import {AccountCircle, Add, EmojiEvents, Mail, Menu, Schedule} from '@mui/icons-material';
+import {AccountCircle, Add, Logout, EmojiEvents, Mail, Menu, Schedule} from '@mui/icons-material';
 import {Link, useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from "react-redux";
 import {addCourse, fetchCourses} from "../../redux/actions/coursesActions";
 import {grey, teal} from "@mui/material/colors";
 import Container from "@mui/material/Container";
-
 
 function Admindashboard() {
 
@@ -34,11 +34,8 @@ function Admindashboard() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [page, setPage] = React.useState(1);
 
-  const chartData = [
-    {id: 0, value: 10, label: 'series A'},
-    {id: 1, value: 15, label: 'series B'},
-    {id: 2, value: 20, label: 'series C'},
-  ];
+
+  const pieParams = { height: 200, margin: { right: 5 } };
 
   const [createCourseData, setCreateCourseData] = React.useState({
     title: '',
@@ -135,13 +132,45 @@ function Admindashboard() {
   };
 
   const isInputValid = () => {
+    const currentDate = new Date().toISOString().split('T')[0];
+    const { startDate, applicationDeadline } = createCourseData.details;
+
+    let errors = {
+      titleErr: '',
+      descriptionErr: '',
+      durationErr: '',
+      startDateErr: '',
+      applicationDeadlineErr: '',
+      adminFeeErr: '',
+      commitmentErr: ''
+    };
+
+    if (!createCourseData.title) errors.titleErr = 'Title is required';
+    if (!createCourseData.description) errors.descriptionErr = 'Description is required';
+    if (!createCourseData.details.duration) errors.durationErr = 'Duration is required';
+    if (!createCourseData.details.adminFee) errors.adminFeeErr = 'Admin Fee is required';
+    if (!createCourseData.details.commitment) errors.commitmentErr = 'Commitment is required';
+
+    if (startDate < currentDate) errors.startDateErr = 'Start date must be today or later';
+    if (applicationDeadline && startDate && applicationDeadline <= startDate) errors.applicationDeadlineErr = 'Application deadline must be after start date';
+
+    setCreateCourseDataErr(errors);
+
+    return Object.values(errors).every(error => error === '');
+
+/* 
     for (let [key, value] of Object.entries(createCourseDataErr)) {
       if (value.length > 0){
         return false
       }
     }
-    return true;
+    return true; */
   }
+
+  const handleLogout = () => {
+    localStorage.removeItem("currentUser"); // Remove user data
+    navigate("/login"); // Redirect to login page
+  };
 
   const sideBarItems = ['overview', 'My Courses', 'Add Course']
   return (
@@ -182,8 +211,18 @@ function Admindashboard() {
               <ListItemText primary={text}/>
             </ListItem>
           ))}
+          <ListItem>
+              <Button 
+                variant="text"
+                sx={{color: '#fff', fontSize:'18px',marginTop: "300px"}}
+                onClick={handleLogout} >
+                  <ListItemIcon sx={{color: '#fff'}}>
+                    <Logout/>
+                  </ListItemIcon>
+                  Logout
+              </Button>
+          </ListItem>
         </List>
-
       </Box>
 
       {/* Main Content */}
@@ -211,7 +250,7 @@ function Admindashboard() {
             <Card>
               <CardContent>
                 <Typography variant="h6">Recent Courses</Typography>
-                <Divider sx={{my: 2}}/>
+                <Divider sx={{my: 3}}/>
                 <Box>
                   <Typography variant="body2">UX/UI Design — Applications</Typography>
                   <Typography variant="caption">Mobile application interface design... 12 lessons</Typography>
@@ -225,24 +264,46 @@ function Admindashboard() {
           <Grid item xs={12} md={5}>
             <Card sx={{mb: 2}}>
               <CardContent>
-
-
+                <Typography variant="subtitle2" color="textSecondary">
+                  TOTAL STUDENTS
+                </Typography>
+                <Typography variant="h4">
+                  700.0
+                </Typography>
+                <Typography variant="body2" style={{ color: 'green' }}>
+                  16% Since last month
+                </Typography>
               </CardContent>
             </Card>
+
+            <Card sx={{mb: 2}}>
+              <CardContent>
+                <Typography variant="subtitle2" color="textSecondary">
+                  COMPLETED COURSES
+                </Typography>
+                <Typography variant="h4">
+                  33.2%
+                </Typography>
+                <Box mt={2}>
+                  <LinearProgress variant="determinate" value={33.2} style={{ height: 10, borderRadius: 5 }} />
+                </Box>
+              </CardContent>
+            </Card>
+
             <Card>
               <CardContent>
-                <PieChart
-                  series={[
-                    {
-                      data,
-                      highlightScope: {faded: 'global', highlighted: 'item'},
-                      faded: {innerRadius: 30, additionalRadius: -30, color: 'gray'},
-                    },
-                  ]}
-                  height={200}
-                />
+              <Stack direction="row" width="100%" textAlign="center" spacing={2}>
+                  <Box flexGrow={1}>
+                    <Typography>Courses PieChart</Typography>
+                    <PieChart
+                      series={[{ data: [{ value: 10 }, { value: 15 }, { value: 20 }] }]}
+                      {...pieParams}
+                    />
+                  </Box>
+                </Stack>
               </CardContent>
             </Card>
+            
           </Grid>
         </Grid>
       </Box>}
@@ -432,6 +493,9 @@ function Admindashboard() {
                     setCreateCourseDataErr({...createCourseDataErr, durationErr: 'required'})
                   }
                 }}
+                style={{
+                  margin:'0.5rem'
+                }}
               />
               <TextField
                 label={'Admen Fee'}
@@ -456,6 +520,9 @@ function Admindashboard() {
                   if (!e.target.value) {
                     setCreateCourseDataErr({...createCourseDataErr, adminFeeErr: 'required'})
                   }
+                }}
+                style={{
+                  margin:'0.5rem'
                 }}
               />
               <TextField
@@ -482,6 +549,9 @@ function Admindashboard() {
                     setCreateCourseDataErr({...createCourseDataErr, commitmentErr: 'required'})
                   }
                 }}
+                style={{
+                  margin:'0.5rem'
+                }}
               />
               <TextField
                 label={'Start Date'}
@@ -499,6 +569,14 @@ function Admindashboard() {
                     }
                   });
                 }}
+                sx={{
+                  '& .MuiInputBase-input': {
+                    textAlign: 'right', // Align the input text to the right
+                  },
+                  '& .MuiFormLabel-root': {
+                    textAlign: 'right', // Align the label text to the right
+                  },
+                }}
                 onFocus={()=>{
                   setCreateCourseDataErr({...createCourseDataErr, startDateErr: ''})
                 }}
@@ -506,6 +584,9 @@ function Admindashboard() {
                   if (!e.target.value) {
                     setCreateCourseDataErr({...createCourseDataErr, startDateErr: 'required'})
                   }
+                }}
+                style={{
+                  margin:'0.5rem'
                 }}
               />
               <TextField
@@ -524,6 +605,14 @@ function Admindashboard() {
                     }
                   });
                 }}
+                sx={{
+                  '& .MuiInputBase-input': {
+                    textAlign: 'right', // Align the input text to the right
+                  },
+                  '& .MuiFormLabel-root': {
+                    textAlign: 'right', // Align the label text to the right
+                  },
+                }}
                 onFocus={()=>{
                   setCreateCourseDataErr({...createCourseDataErr, applicationDeadlineErr: ''})
                 }}
@@ -532,9 +621,14 @@ function Admindashboard() {
                     setCreateCourseDataErr({...createCourseDataErr, applicationDeadlineErr: 'required'})
                   }
                 }}
+                style={{
+                  margin:'0.5rem'
+                }}
               />
 
-              <Button variant={'contained'} onClick={()=>{
+              <Button variant={'contained'} color='success'  style={{
+                  margin:'0.5rem'
+                }} onClick={()=>{
                 if (isInputValid()) {
                   dispatch(addCourse(createCourseData))
                 }

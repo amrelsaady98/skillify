@@ -1,0 +1,9 @@
+{
+  "navbar": {
+    "home": "Home",
+    "search": "Search",
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "login": "Login"
+  }
+}

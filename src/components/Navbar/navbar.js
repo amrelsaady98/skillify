@@ -1,11 +1,15 @@
 import {NavLink, useNavigate} from "react-router-dom";
-import React from "react";
+import React, {useEffect} from "react";
 import './navbar.css'
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import {useDispatch, useSelector} from "react-redux";
+import {useTranslation} from "react-i18next";
+import {Button} from "@mui/material";
 
 const Navbar = () => {
+
+  const {t, i18n} = useTranslation();
   const [showNavbar, setShowNavbar] = React.useState(false);
   const {userItem, isLoggedIn, isAdmin} = useSelector(state => state.auth)
   const dispatch = useDispatch();
@@ -15,53 +19,64 @@ const Navbar = () => {
     setShowNavbar(!showNavbar);
   };
 
+  useEffect(() => {
+    document.documentElement.dir = i18n.dir();
+  }, [i18n]);
+
   return (
     <nav className="navbar">
       <div className="container">
         <div className="logo">
-          <Logo />
+          <Logo/>
         </div>
         <div className="menu-icon" onClick={handleShowNavbar}>
-          <Hamburger />
+          <Hamburger/>
         </div>
         <div className={`nav-elements  ${showNavbar && "active"}`}>
           <ul>
             <li>
-              <NavLink to="/">Home</NavLink>
+              <NavLink to="/">{t('navbar.home')}</NavLink>
             </li>
             <li>
-              <NavLink to="/search">Search</NavLink>
+              <NavLink to="/search">{t('navbar.search')}</NavLink>
             </li>
 
             {
               isAdmin &&
               <li>
-                <NavLink to="/dashboard">Dashboard</NavLink>
+                <NavLink to="/dashboard">{t('navbar.dashboard')}</NavLink>
               </li>
             }
             {
               !isLoggedIn ?
                 <li>
-                  <NavLink to="/login">Login</NavLink>
+                  <NavLink to="/login">{t('navbar.login')}</NavLink>
                 </li>
                 :
                 <li>
-                  <NavLink to="/profile">Profile</NavLink>
+                  <NavLink to="/profile">{t('navbar.profile')}</NavLink>
                 </li>
             }
+            <Button
+              sx={{
+                mx:'4rem'
+              }}
+              onClick={()=>{
+                i18n.language === 'en' ?
+                  i18n.changeLanguage('ar') :
+                  i18n.changeLanguage('en')
+              }}
+            >
+              {i18n.language === 'en' ? 'ar' : 'en'}
+            </Button>
           </ul>
         </div>
+
       </div>
+
     </nav>
   );
 };
-
-const Home = () => <h2>You are in the Home</h2>;
-const Blogs = () => <h2>You are in the Blogs</h2>;
-const Projects = () => <h2>You are in the Projects</h2>;
-const About = () => <h2>You are in the About</h2>;
-const Contact = () => <h2>You are in the Contact</h2>;
-
 
 const Hamburger = () => (
   <svg

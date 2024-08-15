@@ -17,8 +17,11 @@ import {useEffect} from "react";
 import {getCurrentUser, isUserLoggedIn} from "./services/auth_service";
 import {userLogin} from "./redux/actions/authActions";
 
+import {Suspense} from "react";
+import {useTranslation} from 'react-i18next'
 
 function App() {
+  const {t, i18n} = useTranslation();
   const {userItem, isLoggedIn, isAdmin} = useSelector(state => state.auth)
   const dispatch = useDispatch();
   useEffect(() => {
@@ -26,27 +29,32 @@ function App() {
       dispatch(userLogin(getCurrentUser()));
     }
   }, []);
+  useEffect(() => {
+    document.documentElement.dir = i18n.dir();
+  }, [i18n, i18n.language]);
   return (
-      <BrowserRouter>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Routes>
-            <Route element={<WithNav/>}>
-              <Route path="/" element={<HomePage/>} />
-              <Route path="/course/:id" element={<CourseDetails/>} />
-              <Route path="/search" element={<SearchPage/>} />
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/dashboard" element={<Admindashboard />} />
+      <Suspense fallback={'...loading'}>
+        <BrowserRouter>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Routes>
+              <Route element={<WithNav/>}>
+                <Route path="/" element={<HomePage/>} />
+                <Route path="/course/:id" element={<CourseDetails/>} />
+                <Route path="/search" element={<SearchPage/>} />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/dashboard" element={<Admindashboard />} />
 
-            </Route>
-            <Route element={<WithOutNav/>}>
-              <Route path="/Login" element={<LoginInfo />} />
-              <Route path="/Register" element={<RegisterInfo />} />
-              <Route path="*" element={<NotFound />} />
-            </Route>
-          </Routes>
-        </ThemeProvider>
-      </BrowserRouter>
+              </Route>
+              <Route element={<WithOutNav/>}>
+                <Route path="/Login" element={<LoginInfo />} />
+                <Route path="/Register" element={<RegisterInfo />} />
+                <Route path="*" element={<NotFound />} />
+              </Route>
+            </Routes>
+          </ThemeProvider>
+        </BrowserRouter>
+      </Suspense>
   );
 }
 

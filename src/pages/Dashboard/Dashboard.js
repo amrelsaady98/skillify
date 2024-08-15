@@ -20,12 +20,15 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import {AccountCircle, Add, Logout, EmojiEvents, Mail, Menu, Schedule} from '@mui/icons-material';
+import {AccountCircle, Add, Logout, EmojiEvents, Mail, Menu, Schedule, DeleteOutlined} from '@mui/icons-material';
 import {Link, useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from "react-redux";
-import {addCourse, fetchCourses} from "../../redux/actions/coursesActions";
+import {addCourse, fetchCourses, removeFavCourse} from "../../redux/actions/coursesActions";
 import {grey, teal} from "@mui/material/colors";
 import Container from "@mui/material/Container";
+import {IoInformation, IoTrash} from "react-icons/io5";
+import axios from "axios";
+import ConfirmationDialog from "../../components/Dialogs/ConfirmationDailog";
 
 function Admindashboard() {
 
@@ -343,17 +346,46 @@ function Admindashboard() {
                     textAlign: 'center',
                     background: index % 2 == 0 ? 'white' : grey['100'],
                     cursor: 'pointer',
+                  }}
 
-                  }}
-                  onClick={() => {
-                    navigate(`/course/${item.id}`)
-                  }}
                 >
                   <Typography variant={'caption'}>{item.title}</Typography>
                   <Typography variant={'caption'}>{item.details.adminFee}</Typography>
                   <Typography variant={'caption'}>{item.details.duration}</Typography>
                   <Typography variant={'caption'}>{item.details.startDate}</Typography>
                   <Typography variant={'caption'}>{item.details.applicationDeadline}</Typography>
+
+                  <Box
+                    style={{
+                      width:'100%',
+                      display:'flex',
+                      justifyContent:'space-evenly'
+                    }}
+                  >
+                    <IoInformation color={'green'}
+                       onClick={() => {
+                         navigate(`/course/${item.id}`)
+                       }}
+                    />
+                    <ConfirmationDialog
+                      title="Confirmation"
+                      description={`Are you sure you want to delete ${item.title} from database?`}
+                      response={()=>{
+                        axios.delete(`https://66b17fd61ca8ad33d4f44343.mockapi.io/api/v2/courses/${item.id}`)
+                          .then(response => {
+                            dispatch(fetchCourses(`p=${page}&l=8`))
+                          })
+                          .catch((err) => console.log(err));
+                      }}
+                    >
+                      {(showDialog) => (
+                        <IoTrash color={'red'}
+                                 onClick={showDialog}
+                        />
+                      )}
+                    </ConfirmationDialog>
+                  </Box>
+
                 </Box>
                 <Divider style={{
                   height: '2px',
@@ -626,19 +658,41 @@ function Admindashboard() {
                 }}
               />
 
-              <Button variant={'contained'} color='success'  style={{
-                  margin:'0.5rem'
-                }} onClick={()=>{
+            <ConfirmationDialog
+              title="Confirmation"
+              description={`Are you sure you want to Add ${createCourseData.title} to database?`}
+              response={()=>{
                 if (isInputValid()) {
                   dispatch(addCourse(createCourseData))
                 }
-              }}>
-                <Typography sx={{
-                  color:'#fff'
-                }}>
-                  Add Course
-                </Typography>
-              </Button>
+              }}
+            >
+              {(showDialog) => (
+                <Button variant={'contained'} style={{
+                  margin:'0.5rem'
+                }} onClick={showDialog}>
+                  <Typography sx={{
+                    color:'#fff'
+                  }}>
+                    Add Course
+                  </Typography>
+                </Button>
+              )}
+            </ConfirmationDialog>
+
+              {/*<Button variant={'contained'} style={{*/}
+              {/*    margin:'0.5rem'*/}
+              {/*  }} onClick={()=>{*/}
+              {/*  if (isInputValid()) {*/}
+              {/*    dispatch(addCourse(createCourseData))*/}
+              {/*  }*/}
+              {/*}}>*/}
+              {/*  <Typography sx={{*/}
+              {/*    color:'#fff'*/}
+              {/*  }}>*/}
+              {/*    Add Course*/}
+              {/*  </Typography>*/}
+              {/*</Button>*/}
 
           </Box>
         </Box>

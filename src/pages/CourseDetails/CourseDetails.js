@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import pxToRem from "../../assets/theme/functions/pxToRem";
 import Typography from "@mui/material/Typography";
 import {amber, cyan, green, grey, lightBlue, teal} from "@mui/material/colors";
-import {Accordion, AccordionDetails, AccordionSummary, Paper} from "@mui/material";
+import {Accordion, AccordionDetails, AccordionSummary, Alert, Modal, Paper} from "@mui/material";
 import Container from "@mui/material/Container";
 import {IoBookmark, IoBookmarkOutline, IoCheckmarkDone, IoChevronDown} from "react-icons/io5";
 import RoundedFilledButton from "../../components/Buttons/roundedFilledButton";
@@ -15,6 +15,7 @@ import {BookmarkAdd, HeartBroken} from "@mui/icons-material";
 import {useDispatch, useSelector} from "react-redux";
 import {addCourseToFav, removeFavCourse} from "../../redux/actions/coursesActions";
 import Footer from "../../components/Footer/Footer";
+import {handelAddToUserCourses, isUserLoggedIn} from "../../services/auth_service";
 
 async function uplaodData(){
   for(let i = 0; i < data.length; i++) {
@@ -31,6 +32,12 @@ export default function CourseDetails(params) {
   let {id} = useParams();
 
   const [data, setData] = React.useState();
+  const [alert, setAlert] = useState(false);
+  const [alertContent, setAlertContent] = useState({
+    type:'success',
+    content:'initial message',
+  });
+
 
   const {favCourses} = useSelector((state) => state.favCourses);
   const dispatch = useDispatch();
@@ -174,6 +181,36 @@ export default function CourseDetails(params) {
                     <MyRoundedFilledButton
                       title={'Apply Now'}
                       backgroundColor={green["A400"]}
+                      onClick={(e)=>{
+                        e.preventDefault();
+                        console.log(isUserLoggedIn())
+                        if(!isUserLoggedIn()) {
+                          setAlert(true)
+                          setAlertContent({
+                            type:'error',
+                            message:'Login Required',
+                          })
+                        } else {
+                          handelAddToUserCourses(
+                            data,
+                            ()=>{
+                              setAlert(true)
+                              setAlertContent({
+                                type:'success',
+                                message:'Course Added Successfully'
+                              })
+                            },
+                            (message)=>{
+                              setAlert(true)
+                              setAlertContent({
+                                type:'warning',
+                                message: message
+                              })
+                            }
+                          )
+                        }
+
+                      }}
                     />
                     <Box
                       style={{
@@ -332,6 +369,28 @@ export default function CourseDetails(params) {
         </Box>
       }
       <Footer/>
+      <Modal
+        open={alert}
+        style={{
+        }}
+      >
+        <Box
+          style={{
+            width:'100%',
+            height:'100vh',
+            backgroundColor:'transparent',
+            display:'flex',
+            justifyContent:'center',
+            alignItems:'center'
+          }}
+        >
+          <Alert severity={alertContent.type} onClose={() => {
+            setAlert(false)
+          }}>
+            {alertContent.message}
+          </Alert>
+        </Box>
+      </Modal>
     </>
   )
 }

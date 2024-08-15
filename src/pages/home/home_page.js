@@ -19,8 +19,10 @@ import React, {useEffect, useRef, useState} from "react";
 import {CURRENT_USER_KEY} from "../../utils/constants/loaclStorageConstants";
 import {handelAddToUserCourses, isUserLoggedIn} from "../../services/auth_service";
 import Footer from "../../components/Footer/Footer";
+import {useTranslation} from "react-i18next";
 
 export default function HomePage(){
+
 
     const tabScrollRef = useRef(null);
     const items = [
@@ -49,7 +51,7 @@ export default function HomePage(){
       'Business'
     ]
 
-
+    const {t, i18n} = useTranslation();
     const [selectedCat, setCat] = useState(0);
     const [page, setPage] = React.useState(1);
     const [alert, setAlert] = useState(false);
